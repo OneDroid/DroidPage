@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DroidPage | Build Your Mobile App Landing Page</title>
+    <meta name="description"
+        content="Generate beautiful, static landing pages for your Android/iOS apps in seconds. No coding required.">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" defer></script>
+    <!-- Use local libs if CDNs are blocked -->
+    <script src="assets/js/libs/FileSaver.min.js" defer></script>
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="logo-wrapper">
+            <button id="sidebar-toggle" class="header-toggle-btn" title="Toggle Sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <div class="logo">
+                <div class="logo-icon">DP</div>
+                <span>DroidPage</span>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="view-switches header-view-switches">
+                <button class="active" id="view-desktop" title="Desktop View">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                        <line x1="8" y1="21" x2="16" y2="21" />
+                        <line x1="12" y1="17" x2="12" y2="21" />
+                    </svg>
+                </button>
+                <button id="view-mobile" title="Mobile View">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+                        <line x1="12" y1="18" x2="12.01" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <button id="import-btn" class="btn btn-secondary">Import Project</button>
+            <button id="export-json-btn" class="btn btn-secondary">Export Project</button>
+            <button id="reset-btn" class="btn btn-danger">Reset</button>
+            <button id="download-btn" class="btn btn-primary">Download Website</button>
+            <button id="fullscreen-btn" class="btn btn-secondary">Full Screen Preview</button>
+        </div>
+    </header>
+
+    <main class="builder-container">
+        <!-- Sidebar - Form and Theme selection -->
+        <aside class="sidebar" id="sidebar">
+            <section class="theme-selection">
+                <h3>Choose a Theme</h3>
+                <div id="theme-list" class="theme-grid">
+                    <!-- Themes loaded dynamically -->
+                    <div class="theme-skeleton"></div>
+                    <div class="theme-skeleton"></div>
+                    <div class="theme-skeleton"></div>
+                </div>
+            </section>
+
+            <section class="app-details">
+                <h3>App Details</h3>
+                <form id="app-form">
+                    <div class="form-group">
+                        <label for="app_name">App Name</label>
+                        <input type="text" id="app_name" name="app_name" placeholder="E.g. FitnessTracker">
+                    </div>
+                    <div class="form-group">
+                        <label for="tagline">Tagline</label>
+                        <input type="text" id="tagline" name="tagline"
+                            placeholder="E.g. Your personal workout companion">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="3"
+                            placeholder="Tell users why your app is great..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="primary_color">Primary Color</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="primary_color" name="primary_color" value="#3498db">
+                            <span id="color-hex">#3498db</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="play_store_link">Play Store Link</label>
+                        <input type="url" id="play_store_link" name="play_store_link"
+                            placeholder="https://play.google.com/store/apps/details?id=...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>App Icon</label>
+                        <div class="image-upload" id="icon-upload">
+                            <input type="file" id="app_icon_input" accept="image/*" hidden>
+                            <img id="icon-preview" class="image-preview hidden">
+                            <div class="upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <span>Click to Upload Icon</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Screenshots (Up to 3)</label>
+                        <div class="screenshots-row">
+                            <div class="image-upload-small" id="screenshot-1-upload">
+                                <input type="file" id="screenshot_1_input" accept="image/*" hidden>
+                                <img id="screenshot-1-preview" class="image-preview hidden">
+                                <div class="upload-placeholder-small">1</div>
+                            </div>
+                            <div class="image-upload-small" id="screenshot-2-upload">
+                                <input type="file" id="screenshot_2_input" accept="image/*" hidden>
+                                <img id="screenshot-2-preview" class="image-preview hidden">
+                                <div class="upload-placeholder-small">2</div>
+                            </div>
+                            <div class="image-upload-small" id="screenshot-3-upload">
+                                <input type="file" id="screenshot_3_input" accept="image/*" hidden>
+                                <img id="screenshot-3-preview" class="image-preview hidden">
+                                <div class="upload-placeholder-small">3</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </aside>
+
+        <!-- Preview Area -->
+        <section class="preview-area">
+            <div id="resizer" class="resizer">
+                <div class="resizer-handle" id="resizer-handle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="preview-iframe-wrapper">
+                <iframe id="preview-frame" sandbox="allow-scripts allow-same-origin"></iframe>
+            </div>
+        </section>
+    </main>
+
+    <!-- Project Data handling -->
+    <input type="file" id="import-json-input" accept="application/json" hidden>
+
+    <script type="module" src="assets/js/app.js"></script>
+</body>
+
+</html>

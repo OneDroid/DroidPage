@@ -1,0 +1,23 @@
+[
+  {
+    "id": "theme-default",
+    "name": "Classic Blue",
+    "description": "A clean, modern blue-themed landing page.",
+    "thumbnail": "templates/droidpage-default/assets/screenshots/notes_list.png",
+    "path": "templates/theme-default/"
+  },
+  {
+    "id": "theme-dark",
+    "name": "Midnight Dark",
+    "description": "Sleek dark design for a premium look.",
+    "thumbnail": "templates/droidpage-default/assets/screenshots/note_editor.png",
+    "path": "templates/theme-dark/"
+  },
+  {
+    "id": "theme-minimal",
+    "name": "Minimalist Light",
+    "description": "Clean white background with focused content.",
+    "thumbnail": "templates/droidpage-default/assets/screenshots/lock_screen.png",
+    "path": "templates/theme-minimal/"
+  }
+]

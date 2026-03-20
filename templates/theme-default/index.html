@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{app_name}} - {{tagline}}</title>
+    <meta name="description" content="{{description}}">
+    <meta name="theme-color" content="{{primary_color}}">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="{{app_icon}}">
+    <style>
+        :root {
+            --primary-color: {{primary_color}};
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <img src="{{app_icon}}" alt="{{app_name}} icon" class="nav-logo">
+                <span class="nav-title">{{app_name}}</span>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <img src="{{app_icon}}" alt="{{app_name}} icon" class="hero-logo">
+                <h1>{{app_name}}</h1>
+                <p class="tagline">{{tagline}}</p>
+                <p class="description">{{description}}</p>
+                <div class="cta">
+                    <a href="{{play_store_link}}" class="btn btn-primary" target="_blank">Download on Google Play</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="{{screenshot_1}}" alt="{{app_name}} Screenshot 1" class="main-screenshot">
+            </div>
+        </div>
+    </section>
+
+    <section class="screenshots">
+        <div class="container">
+            <h2>Experience {{app_name}}</h2>
+            <div class="screenshot-grid">
+                <div class="screenshot-item"><img src="{{screenshot_1}}" alt="Screenshot 1"></div>
+                <div class="screenshot-item"><img src="{{screenshot_2}}" alt="Screenshot 2"></div>
+                <div class="screenshot-item"><img src="{{screenshot_3}}" alt="Screenshot 3"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 {{app_name}}. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
