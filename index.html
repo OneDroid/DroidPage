@@ -18,14 +18,14 @@
 <body>
     <header class="app-header">
         <div class="logo-wrapper">
-            <button id="sidebar-toggle" class="header-toggle-btn" title="Toggle Sidebar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-            </button>
+            <div class="action-group">
+                <button id="sidebar-toggle" class="header-toggle-btn" title="Toggle Sidebar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-close"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path><path d="m16 15-3-3 3-3"></path></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon-open"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M9 3v18"></path><path d="m14 9 3 3-3 3"></path></svg>
+                </button>
+            </div>
             <div class="logo">
-                <div class="logo-icon">DP</div>
+                <img src="assets/img/droid-page-icon.png" alt="DroidPage" class="logo-icon">
                 <span>DroidPage</span>
             </div>
         </div>
@@ -47,11 +47,25 @@
                     </svg>
                 </button>
             </div>
-            <button id="import-btn" class="btn btn-secondary">Import Project</button>
-            <button id="export-json-btn" class="btn btn-secondary">Export Project</button>
-            <button id="reset-btn" class="btn btn-danger">Reset</button>
-            <button id="download-btn" class="btn btn-primary">Download Website</button>
-            <button id="fullscreen-btn" class="btn btn-secondary">Full Screen Preview</button>
+            <div class="action-group">
+                <button id="import-btn" class="btn btn-secondary" title="Import Project">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                </button>
+                <button id="export-json-btn" class="btn btn-secondary" title="Export Project">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                </button>
+                <button id="reset-btn" class="btn btn-danger" title="Reset">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+                </button>
+            </div>
+            <div class="action-group">
+                <button id="download-btn" class="btn btn-primary" title="Download Website">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 17 12 21 16 17"></polyline><line x1="12" y1="12" x2="12" y2="21"></line><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path></svg>
+                </button>
+                <button id="fullscreen-btn" class="btn btn-secondary" title="Full Screen Preview">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"></path><path d="M21 8V5a2 2 0 0 0-2-2h-3"></path><path d="M3 16v3a2 2 0 0 0 2 2h3"></path><path d="M16 21h3a2 2 0 0 0 2-2v-3"></path></svg>
+                </button>
+            </div>
         </div>
     </header>
 

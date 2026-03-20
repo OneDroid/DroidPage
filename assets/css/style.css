@@ -61,14 +61,7 @@ body {
 .logo-icon {
     width: 40px;
     height: 40px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-    color: white;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.2rem;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    object-fit: contain;
 }
 
 .actions {
@@ -78,7 +71,7 @@ body {
 }
 
 .btn {
-    padding: 10px 20px;
+    padding: 10px;
     border-radius: var(--radius-md);
     font-weight: 500;
     font-size: 0.95rem;
@@ -87,6 +80,7 @@ body {
     border: none;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
 }
 
@@ -147,7 +141,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 8px;
+    width: 14px;
     height: 100%;
     cursor: col-resize;
     background: transparent;
@@ -165,13 +159,12 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 8px;
+    width: 9px;
     height: 16px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 2px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -181,10 +174,7 @@ body {
     opacity: 0.8;
 }
 
-.resizer:hover .resizer-handle {
-    width: 10px;
-    height: 20px;
-}
+
 
 .logo-wrapper {
     display: flex;
@@ -193,10 +183,11 @@ body {
 }
 
 .header-toggle-btn {
+    width: 34px;
+    height: 34px;
     background: transparent;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    padding: 8px;
+    border: none;
+    border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -206,16 +197,24 @@ body {
 }
 
 .header-toggle-btn:hover {
-    background: var(--secondary-hover);
-    color: var(--primary-color);
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
 }
 
 .header-toggle-btn svg {
     transition: transform 0.3s;
 }
 
-.header-toggle-btn.collapsed svg {
-    transform: rotate(180deg);
+.header-toggle-btn .icon-open {
+    display: none;
+}
+
+.header-toggle-btn.collapsed .icon-open {
+    display: block;
+}
+
+.header-toggle-btn.collapsed .icon-close {
+    display: none;
 }
 
 .resizing {
@@ -407,7 +406,8 @@ input[type="color"] {
     position: relative;
 }
 
-.view-switches {
+.view-switches,
+.action-group {
     background: #f1f5f9;
     border-radius: var(--radius-md);
     padding: 4px;
@@ -415,17 +415,22 @@ input[type="color"] {
     gap: 4px;
 }
 
-.view-switches button {
+.view-switches button,
+.action-group .btn {
+    width: 34px;
+    height: 34px;
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    padding: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     border-radius: var(--radius-sm);
     transition: all 0.2s;
+    padding: 0;
+    box-shadow: none !important;
+    transform: none !important;
 }
 
 .view-switches button.active {
@@ -484,4 +489,20 @@ input[type="color"] {
 
 .theme-skeleton {
     animation: skeleton-pulse 1.5s infinite;
+}
+
+
+.action-group .btn-danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
+}
+
+.action-group .btn-primary:hover {
+    background: rgba(99, 102, 241, 0.1);
+    color: var(--primary-color);
+}
+
+.action-group .btn-secondary:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-primary);
 }
