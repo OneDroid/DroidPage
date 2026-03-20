@@ -123,22 +123,54 @@ class DroidPageApp {
             document.body.classList.add('resizing');
         });
 
-        window.addEventListener('mousemove', (e) => {
-            if (!isResizing) return;
-
-            let newWidth = e.clientX;
-            const minWidth = window.innerWidth * 0.2;
-            const maxWidth = window.innerWidth * 0.5;
-
-            if (newWidth < minWidth) newWidth = minWidth;
-            if (newWidth > maxWidth) newWidth = maxWidth;
-
-            applyWidth(newWidth);
-        });
-
         window.addEventListener('mouseup', () => {
             isResizing = false;
+            isMobileResizing = false;
             document.body.classList.remove('resizing');
+        });
+
+        // Mobile Resizer
+        const mobileResizer = document.getElementById('mobile-resizer');
+        const previewIframeWrapper = document.querySelector('.preview-iframe-wrapper');
+        const previewArea = document.querySelector('.preview-area');
+        let isMobileResizing = false;
+
+        let centerX = 0;
+        let areaWidth = 0;
+
+        mobileResizer.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            isMobileResizing = true;
+            document.body.classList.add('resizing');
+            
+            const areaRect = previewArea.getBoundingClientRect();
+            centerX = areaRect.left + areaRect.width / 2;
+            areaWidth = areaRect.width;
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isResizing) {
+                let newWidth = e.clientX;
+                const minWidth = window.innerWidth * 0.2;
+                const maxWidth = window.innerWidth * 0.5;
+
+                if (newWidth < minWidth) newWidth = minWidth;
+                if (newWidth > maxWidth) newWidth = maxWidth;
+
+                applyWidth(newWidth);
+            }
+
+            if (isMobileResizing) {
+                let newWidth = Math.abs(e.clientX - centerX) * 2;
+                const minWidth = 300;
+                const maxWidth = areaWidth - 40;
+
+                if (newWidth < minWidth) newWidth = minWidth;
+                if (newWidth > maxWidth) newWidth = maxWidth;
+
+                previewIframeWrapper.style.width = `${newWidth}px`;
+                localStorage.setItem('droidpage_mobile_width', newWidth);
+            }
         });
 
         const toggleSidebar = (e) => {
@@ -200,7 +232,15 @@ class DroidPageApp {
                 document.querySelectorAll('.view-switches button').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 const isMobile = btn.id === 'view-mobile';
-                document.querySelector('.preview-area').classList.toggle('mobile', isMobile);
+                const previewAreaEl = document.querySelector('.preview-area');
+                previewAreaEl.classList.toggle('mobile', isMobile);
+                
+                if (isMobile) {
+                    const savedMobileWidth = localStorage.getItem('droidpage_mobile_width') || '375';
+                    previewIframeWrapper.style.width = `${savedMobileWidth}px`;
+                } else {
+                    previewIframeWrapper.style.width = '';
+                }
             });
         });
     }
