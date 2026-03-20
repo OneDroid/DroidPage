@@ -405,6 +405,16 @@ input[type="color"] {
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden;
+    /* Prevent child overflow from affecting layout */
+}
+
+.preview-area.mobile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 24px;
+    /* Ensure there is some breathing room */
 }
 
 .view-switches,
@@ -449,14 +459,15 @@ input[type="color"] {
     background: white;
     overflow: hidden;
     position: relative;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: width 0.3s ease, height 0.3s ease;
+    /* Only animate intentional resizing changes */
 }
 
 .preview-area.mobile .preview-iframe-wrapper {
     width: 375px;
     max-width: 100%;
     height: 100%;
-    margin: auto;
+    margin: 0;
     flex: none;
     overflow: visible;
 }
