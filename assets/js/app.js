@@ -10,26 +10,36 @@ class DroidPageApp {
     }
 
     async init() {
-        // Initialize managers
+        this.log('Initializing form managers...');
         FormManager.init((data) => this.handleFormChange(data));
+        
+        this.log('Connecting to preview renderer...');
         Preview.init('preview-frame');
 
-        // Load themes
+        this.log('Loading theme collection...');
         const themes = await ThemeManager.loadThemes();
         this.renderThemeList(themes);
 
-        // Select initial theme
+        this.log('Restoring previous project...');
         const initialTheme = ThemeManager.getSelectedTheme();
         this.setActiveTheme(initialTheme);
-
-        // Populate form with existing data
         this.populateForm(FormManager.formData);
 
-        // Set up event listeners
+        this.log('Finalizing interface...');
         this.setupEventListeners();
+        await this.refreshPreview();
 
-        // Initial render
-        this.refreshPreview();
+        // Fade out loader
+        setTimeout(() => {
+            document.getElementById('app-loader').classList.add('hidden');
+        }, 500);
+    }
+
+    log(message) {
+        const logContainer = document.getElementById('loader-log');
+        if (logContainer) {
+            logContainer.innerHTML = `<p>${message}</p>`;
+        }
     }
 
     renderThemeList(themes) {
@@ -91,6 +101,19 @@ class DroidPageApp {
     setupEventListeners() {
         const form = document.getElementById('app-form');
 
+        // Theme management
+        const themeToggle = document.getElementById('theme-toggle');
+        const savedTheme = localStorage.getItem('droidpage_ui_theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('droidpage_ui_theme', isDark ? 'dark' : 'light');
+        });
+
         // Resizable Sidebar
         const resizer = document.getElementById('resizer');
         const sidebar = document.getElementById('sidebar');
@@ -99,7 +122,11 @@ class DroidPageApp {
 
         let isResizing = false;
         const getMinWidth = () => window.innerWidth * 0.2;
+        const getMaxWidth = () => window.innerWidth * 0.3;
         let lastWidth = Math.max(getMinWidth(), parseInt(localStorage.getItem('droidpage_sidebar_width')) || 380);
+
+        // Enforce max width on load
+        if (lastWidth > getMaxWidth()) lastWidth = getMaxWidth();
 
         // Initial setup
         const applyWidth = (width) => {
@@ -142,7 +169,7 @@ class DroidPageApp {
             e.preventDefault();
             isMobileResizing = true;
             document.body.classList.add('resizing');
-            
+
             const areaRect = previewArea.getBoundingClientRect();
             centerX = areaRect.left + areaRect.width / 2;
             areaWidth = areaRect.width;
@@ -152,7 +179,7 @@ class DroidPageApp {
             if (isResizing) {
                 let newWidth = e.clientX;
                 const minWidth = window.innerWidth * 0.2;
-                const maxWidth = window.innerWidth * 0.5;
+                const maxWidth = window.innerWidth * 0.3;
 
                 if (newWidth < minWidth) newWidth = minWidth;
                 if (newWidth > maxWidth) newWidth = maxWidth;
@@ -234,7 +261,7 @@ class DroidPageApp {
                 const isMobile = btn.id === 'view-mobile';
                 const previewAreaEl = document.querySelector('.preview-area');
                 previewAreaEl.classList.toggle('mobile', isMobile);
-                
+
                 if (isMobile) {
                     const savedMobileWidth = localStorage.getItem('droidpage_mobile_width') || '375';
                     previewIframeWrapper.style.width = `${savedMobileWidth}px`;
