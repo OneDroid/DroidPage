@@ -6,19 +6,28 @@ export const Preview = {
     },
 
     update(renderedHtml, basePath) {
-        if (!this.iframe) return;
+        return new Promise((resolve) => {
+            if (!this.iframe) return resolve();
 
-        // Ensure theme path is respected by adding <base> tag
-        const baseTag = `<base href="${window.location.protocol}//${window.location.host}${window.location.pathname.replace(/\/[^/]*$/, '/')}${basePath}">`;
-        
-        let htmlWithBase = renderedHtml;
-        if (!renderedHtml.includes('<base')) {
-            htmlWithBase = renderedHtml.replace('<head>', `<head>${baseTag}`);
-        }
+            // Ensure theme path is respected by adding <base> tag
+            const baseTag = `<base href="${window.location.protocol}//${window.location.host}${window.location.pathname.replace(/\/[^/]*$/, '/')}${basePath}">`;
+            
+            let htmlWithBase = renderedHtml;
+            if (!renderedHtml.includes('<base')) {
+                htmlWithBase = renderedHtml.replace('<head>', `<head>${baseTag}`);
+            }
 
-        const doc = this.iframe.contentDocument || this.iframe.contentWindow.document;
-        doc.open();
-        doc.write(htmlWithBase);
-        doc.close();
+            // Set up load listener before writing
+            const onIframeLoad = () => {
+                this.iframe.removeEventListener('load', onIframeLoad);
+                resolve();
+            };
+            this.iframe.addEventListener('load', onIframeLoad);
+
+            const doc = this.iframe.contentDocument || this.iframe.contentWindow.document;
+            doc.open();
+            doc.write(htmlWithBase);
+            doc.close();
+        });
     }
 };

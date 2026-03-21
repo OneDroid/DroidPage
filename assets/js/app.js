@@ -324,7 +324,7 @@ class DroidPageApp {
 
         const templateHtml = await Renderer.fetchTemplate(theme.path);
         const renderedHtml = Renderer.render(templateHtml, FormManager.formData);
-        Preview.update(renderedHtml, theme.path);
+        await Preview.update(renderedHtml, theme.path);
     }
 
     async handleDownload() {
