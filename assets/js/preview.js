@@ -114,7 +114,83 @@ export const Preview = {
             root.style.setProperty('--container-max-width', `${data.max_width}px`);
         }
 
+        if (data.header_logo_size) {
+            root.style.setProperty('--header-logo-size', `${data.header_logo_size}px`);
+        }
+
         const fontStack = this.fontStacks[data.font_family] || this.fontStacks.inter;
         root.style.setProperty('--font-sans', fontStack);
+    },
+
+    updateContent(data) {
+        if (!this.iframe) return;
+
+        const doc = this.iframe.contentDocument || this.iframe.contentWindow?.document;
+        if (!doc) return;
+
+        const appName = data.app_name || 'My Awesome App';
+        const tagline = data.tagline || 'The Best Mobile Experience';
+        const footerBottomText = data.footer_bottom_text
+            || `&copy; 2025 ${appName}. Powered by <a href="https://github.com/OneDroid/DroidPage" target="_blank" style="color: inherit; text-decoration: underline;">DroidPage</a>.`;
+
+        const setText = (id, value) => {
+            const el = doc.getElementById(id);
+            if (el) el.textContent = value;
+        };
+
+        const setHtml = (id, value) => {
+            const el = doc.getElementById(id);
+            if (el) el.innerHTML = value;
+        };
+
+        const setHref = (id, href) => {
+            const el = doc.getElementById(id);
+            if (el) el.setAttribute('href', href || '#');
+        };
+
+        setText('header-brand-title', data.header_logo_title || appName);
+        setText('header-brand-subtitle', data.header_logo_subtitle || tagline);
+        setText('footer-brand-title', data.footer_brand_title || appName);
+        setText('footer-brand-subtitle', data.footer_brand_subtitle || tagline);
+        setHtml('footer-bottom', footerBottomText);
+
+        setText('header-nav-link-1', data.header_nav_link_1_label || '');
+        setText('header-nav-link-2', data.header_nav_link_2_label || '');
+        setText('header-nav-link-3', data.header_nav_link_3_label || '');
+        setText('header-nav-cta', data.header_nav_cta_label || '');
+        setText('footer-link-1', data.footer_link_1_label || '');
+        setText('footer-link-2', data.footer_link_2_label || '');
+        setText('footer-link-3', data.footer_link_3_label || '');
+
+        setHref('header-nav-link-1', data.header_nav_link_1_url);
+        setHref('header-nav-link-2', data.header_nav_link_2_url);
+        setHref('header-nav-link-3', data.header_nav_link_3_url);
+        setHref('header-nav-cta', data.header_nav_cta_url);
+        setHref('footer-link-1', data.footer_link_1_url);
+        setHref('footer-link-2', data.footer_link_2_url);
+        setHref('footer-link-3', data.footer_link_3_url);
+
+        const siteHeader = doc.getElementById('site-header');
+        if (siteHeader) {
+            siteHeader.classList.toggle('is-static', data.sticky_header === 'false');
+            siteHeader.classList.toggle('is-sticky', data.sticky_header !== 'false');
+        }
+
+        const headerBrand = doc.getElementById('header-brand');
+        let headerLogo = headerBrand?.querySelector('.header-brand-logo');
+        const headerBrandCopy = headerBrand?.querySelector('.header-brand-copy');
+        if (headerBrand && headerBrandCopy) {
+            if (data.header_logo) {
+                if (!headerLogo) {
+                    headerLogo = doc.createElement('img');
+                    headerLogo.className = 'header-brand-logo';
+                    headerBrand.insertBefore(headerLogo, headerBrandCopy);
+                }
+                headerLogo.src = data.header_logo;
+                headerLogo.alt = `${data.header_logo_title || appName} logo`;
+            } else if (headerLogo) {
+                headerLogo.remove();
+            }
+        }
     }
 };

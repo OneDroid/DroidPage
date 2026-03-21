@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="assets/css/theme.css">
 
     <!-- Renderer-injected theme vars — read by theme.js, formatter-safe -->
-    <script type="application/json" id="theme-vars">{"--font-choice":"{{font_family}}","--primary-color":"{{primary_color}}","--bg-color":"{{bg_color}}","--text-primary":"{{text_primary}}","--text-secondary":"{{text_secondary}}","--card-bg":"{{card_bg}}","--border-color":"{{border_color}}","--header-bg":"{{header_bg}}","--footer-bg":"{{footer_bg}}","--container-max-width":"{{max_width}}px"}</script>
+    <script type="application/json" id="theme-vars">{"--font-choice":"{{font_family}}","--primary-color":"{{primary_color}}","--bg-color":"{{bg_color}}","--text-primary":"{{text_primary}}","--text-secondary":"{{text_secondary}}","--card-bg":"{{card_bg}}","--border-color":"{{border_color}}","--header-bg":"{{header_bg}}","--footer-bg":"{{footer_bg}}","--container-max-width":"{{max_width}}px","--header-logo-size":"{{header_logo_size}}px"}</script>
 </head>
 
 <body>
@@ -29,18 +29,24 @@
     <!-- ══════════════════════════════════════════════════════
          HEADER — full-width bg, inner content max-width
     ══════════════════════════════════════════════════════ -->
-    <header class="site-header">
+    <header class="site-header {{header_sticky_class}}" id="site-header">
         <div class="container">
-            <a href="#" class="header-logo">{{app_name}}</a>
+            <a href="#" class="header-brand" id="header-brand">
+                {{header_logo_markup}}
+                <span class="header-brand-copy">
+                    <span class="header-brand-title" id="header-brand-title">{{header_logo_title}}</span>
+                    <span class="header-brand-subtitle" id="header-brand-subtitle">{{header_logo_subtitle}}</span>
+                </span>
+            </a>
 
             <nav>
                 <ul class="header-nav">
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#screenshots">Screenshots</a></li>
-                    <li><a href="./privacy">Privacy</a></li>
+                    <li><a href="{{header_nav_link_1_url}}" id="header-nav-link-1">{{header_nav_link_1_label}}</a></li>
+                    <li><a href="{{header_nav_link_2_url}}" id="header-nav-link-2">{{header_nav_link_2_label}}</a></li>
+                    <li><a href="{{header_nav_link_3_url}}" id="header-nav-link-3">{{header_nav_link_3_label}}</a></li>
                     <li>
-                        <a href="{{play_store_link}}" class="nav-cta" target="_blank" rel="noopener">
-                            Get the App
+                        <a href="{{header_nav_cta_url}}" class="nav-cta" target="_blank" rel="noopener" id="header-nav-cta">
+                            {{header_nav_cta_label}}
                         </a>
                     </li>
                 </ul>
@@ -185,21 +191,18 @@
         <div class="container">
             <div class="footer-inner">
                 <div>
-                    <a href="#" class="footer-brand">{{app_name}}</a>
-                    <p class="footer-tagline">{{tagline}}</p>
+                    <a href="#" class="footer-brand" id="footer-brand-title">{{footer_brand_title}}</a>
+                    <p class="footer-tagline" id="footer-brand-subtitle">{{footer_brand_subtitle}}</p>
                 </div>
                 <nav>
                     <ul class="footer-links">
-                        <li><a href="{{play_store_link}}" target="_blank" rel="noopener">Play Store</a></li>
-                        <li><a href="./privacy">Privacy Policy</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="{{footer_link_1_url}}" target="_blank" rel="noopener" id="footer-link-1">{{footer_link_1_label}}</a></li>
+                        <li><a href="{{footer_link_2_url}}" id="footer-link-2">{{footer_link_2_label}}</a></li>
+                        <li><a href="{{footer_link_3_url}}" id="footer-link-3">{{footer_link_3_label}}</a></li>
                     </ul>
                 </nav>
             </div>
-            <div class="footer-bottom">
-                &copy; 2025 {{app_name}}. Powered by <a href="https://github.com/OneDroid/DroidPage" target="_blank"
-                    style="color: inherit; text-decoration: underline;">DroidPage</a>.
-            </div>
+            <div class="footer-bottom" id="footer-bottom">{{footer_bottom_text}}</div>
         </div>
     </footer>
 

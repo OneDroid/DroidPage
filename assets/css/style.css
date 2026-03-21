@@ -423,6 +423,58 @@ body {
     font-size: 0.85rem;
 }
 
+.subsection-title {
+    margin: 20px 0 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.toggle-row {
+    display: grid;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+}
+
+.toggle-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--input-bg);
+    color: var(--text-primary);
+    cursor: pointer;
+}
+
+.toggle-control input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-color);
+}
+
+.link-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 12px;
+}
+
+.range-input-row {
+    display: grid;
+    grid-template-columns: 1fr 88px;
+    gap: 12px;
+    align-items: center;
+}
+
+.range-input-row input[type="range"] {
+    width: 100%;
+    accent-color: var(--primary-color);
+}
+
 /* Keep old margin for form-groups inside section-body */
 .section-body .form-group {
     margin-bottom: 16px;
@@ -885,6 +937,11 @@ input[type="color"] {
 
 @media (max-width: 1200px) {
     .color-vars-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .link-grid,
+    .toggle-row {
         grid-template-columns: 1fr;
     }
 }

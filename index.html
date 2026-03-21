@@ -175,7 +175,7 @@
                 </div>
                 <div class="section-body">
                     <div class="section-copy">
-                        Tune the selected theme palette and typography for the live preview and export.
+                        Tune the theme palette and typography.
                     </div>
                     <div class="form-group">
                         <label for="font_family">Font Family</label>
@@ -263,6 +263,135 @@
                             </div>
                         </div>
                     </form>
+                </div>
+            </section>
+
+            <section class="header-footer-settings collapsed" id="section-header-footer">
+                <div class="section-header" data-toggle="section-header-footer">
+                    <h3>Header & Footer</h3>
+                    <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="section-body" id="header-footer-controls">
+                    <div class="section-copy">
+                        Edit the header layout, navbar links, and footer content.
+                    </div>
+
+                    <div class="subsection-title">Header</div>
+                    <div class="toggle-row">
+                        <label class="toggle-control" for="sticky_header">
+                            <input type="checkbox" id="sticky_header" name="sticky_header" checked>
+                            <span>Sticky Header</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Header Logo</label>
+                        <div class="image-upload" id="header-logo-upload">
+                            <input type="file" id="header_logo_input" accept="image/*" hidden>
+                            <img id="header-logo-preview" class="image-preview hidden">
+                            <div class="upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <span>Upload Header Logo</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="header_logo_size">Logo Size</label>
+                        <div class="range-input-row">
+                            <input type="range" id="header_logo_size" name="header_logo_size" min="24" max="96" step="1" value="46">
+                            <input type="number" id="header_logo_size_number" min="24" max="96" step="1" value="46">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="header_logo_title">Header Logo Title</label>
+                        <input type="text" id="header_logo_title" name="header_logo_title" placeholder="Defaults to App Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="header_logo_subtitle">Header Logo Subtitle</label>
+                        <input type="text" id="header_logo_subtitle" name="header_logo_subtitle" placeholder="Defaults to Tagline">
+                    </div>
+
+                    <div class="subsection-title">Navbar</div>
+                    <div class="link-grid">
+                        <div class="form-group">
+                            <label for="header_nav_link_1_label">Link 1 Label</label>
+                            <input type="text" id="header_nav_link_1_label" name="header_nav_link_1_label">
+                        </div>
+                        <div class="form-group">
+                            <label for="header_nav_link_1_url">Link 1 URL</label>
+                            <input type="text" id="header_nav_link_1_url" name="header_nav_link_1_url">
+                        </div>
+                        <div class="form-group">
+                            <label for="header_nav_link_2_label">Link 2 Label</label>
+                            <input type="text" id="header_nav_link_2_label" name="header_nav_link_2_label">
+                        </div>
+                        <div class="form-group">
+                            <label for="header_nav_link_2_url">Link 2 URL</label>
+                            <input type="text" id="header_nav_link_2_url" name="header_nav_link_2_url">
+                        </div>
+                        <div class="form-group">
+                            <label for="header_nav_link_3_label">Link 3 Label</label>
+                            <input type="text" id="header_nav_link_3_label" name="header_nav_link_3_label">
+                        </div>
+                        <div class="form-group">
+                            <label for="header_nav_link_3_url">Link 3 URL</label>
+                            <input type="text" id="header_nav_link_3_url" name="header_nav_link_3_url">
+                        </div>
+                        <div class="form-group">
+                            <label for="header_nav_cta_label">CTA Label</label>
+                            <input type="text" id="header_nav_cta_label" name="header_nav_cta_label">
+                        </div>
+                        <div class="form-group">
+                            <label for="header_nav_cta_url">CTA URL</label>
+                            <input type="text" id="header_nav_cta_url" name="header_nav_cta_url">
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">Footer</div>
+                    <div class="form-group">
+                        <label for="footer_brand_title">Footer Brand Title</label>
+                        <input type="text" id="footer_brand_title" name="footer_brand_title" placeholder="Defaults to App Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="footer_brand_subtitle">Footer Brand Subtitle</label>
+                        <textarea id="footer_brand_subtitle" name="footer_brand_subtitle" rows="2" placeholder="Defaults to Tagline"></textarea>
+                    </div>
+                    <div class="link-grid">
+                        <div class="form-group">
+                            <label for="footer_link_1_label">Footer Link 1 Label</label>
+                            <input type="text" id="footer_link_1_label" name="footer_link_1_label">
+                        </div>
+                        <div class="form-group">
+                            <label for="footer_link_1_url">Footer Link 1 URL</label>
+                            <input type="text" id="footer_link_1_url" name="footer_link_1_url">
+                        </div>
+                        <div class="form-group">
+                            <label for="footer_link_2_label">Footer Link 2 Label</label>
+                            <input type="text" id="footer_link_2_label" name="footer_link_2_label">
+                        </div>
+                        <div class="form-group">
+                            <label for="footer_link_2_url">Footer Link 2 URL</label>
+                            <input type="text" id="footer_link_2_url" name="footer_link_2_url">
+                        </div>
+                        <div class="form-group">
+                            <label for="footer_link_3_label">Footer Link 3 Label</label>
+                            <input type="text" id="footer_link_3_label" name="footer_link_3_label">
+                        </div>
+                        <div class="form-group">
+                            <label for="footer_link_3_url">Footer Link 3 URL</label>
+                            <input type="text" id="footer_link_3_url" name="footer_link_3_url">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="footer_bottom_text">Footer Bottom Text</label>
+                        <input type="text" id="footer_bottom_text" name="footer_bottom_text" placeholder="Defaults to © 2025 App Name. Powered by DroidPage.">
+                    </div>
                 </div>
             </section>
 

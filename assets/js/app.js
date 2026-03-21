@@ -22,7 +22,32 @@ const LIVE_THEME_FIELDS = new Set([
     'border_color',
     'header_bg',
     'footer_bg',
+    'header_logo_size',
     'max_width'
+]);
+
+const LIVE_CONTENT_FIELDS = new Set([
+    'sticky_header',
+    'header_logo',
+    'header_logo_title',
+    'header_logo_subtitle',
+    'header_nav_link_1_label',
+    'header_nav_link_1_url',
+    'header_nav_link_2_label',
+    'header_nav_link_2_url',
+    'header_nav_link_3_label',
+    'header_nav_link_3_url',
+    'header_nav_cta_label',
+    'header_nav_cta_url',
+    'footer_brand_title',
+    'footer_brand_subtitle',
+    'footer_link_1_label',
+    'footer_link_1_url',
+    'footer_link_2_label',
+    'footer_link_2_url',
+    'footer_link_3_label',
+    'footer_link_3_url',
+    'footer_bottom_text'
 ]);
 
 class DroidPageApp {
@@ -183,7 +208,18 @@ class DroidPageApp {
     populateForm(data) {
         Object.keys(data).forEach(key => {
             const input = document.getElementById(key);
-            if (input) input.value = data[key];
+            if (input) {
+                if (input.type === 'checkbox') {
+                    input.checked = data[key] === 'true';
+                } else {
+                    input.value = data[key];
+                }
+            }
+
+            if (key === 'header_logo_size') {
+                const sizeNumberInput = document.getElementById('header_logo_size_number');
+                if (sizeNumberInput) sizeNumberInput.value = data[key];
+            }
 
             // Sync color var swatches if rendered
             const cvPreview = document.getElementById(`cv_preview_${key}`);
@@ -198,6 +234,7 @@ class DroidPageApp {
         if (colorHex) colorHex.textContent = data.primary_color;
 
         if (data.app_icon)     this.showPreview('icon-preview', data.app_icon);
+        if (data.header_logo)  this.showPreview('header-logo-preview', data.header_logo);
         if (data.screenshot_1) this.showPreview('screenshot-1-preview', data.screenshot_1);
         if (data.screenshot_2) this.showPreview('screenshot-2-preview', data.screenshot_2);
         if (data.screenshot_3) this.showPreview('screenshot-3-preview', data.screenshot_3);
@@ -241,6 +278,9 @@ class DroidPageApp {
     setupEventListeners() {
         const form = document.getElementById('app-form');
         const fontFamilySelect = document.getElementById('font_family');
+        const headerFooterControls = document.getElementById('header-footer-controls');
+        const headerLogoSizeRange = document.getElementById('header_logo_size');
+        const headerLogoSizeNumber = document.getElementById('header_logo_size_number');
 
         // App UI theme toggle (light/dark)
         const themeToggle = document.getElementById('theme-toggle');
@@ -341,8 +381,11 @@ class DroidPageApp {
 
         // Form field changes (text inputs, textareas, number, url, color in App Details)
         const handleFieldChange = (e) => {
-            const { name, value } = e.target;
+            const { name } = e.target;
             if (!name) return;
+            const value = e.target.type === 'checkbox'
+                ? (e.target.checked ? 'true' : 'false')
+                : e.target.value;
             if (name === 'primary_color') {
                 const colorHex = document.getElementById('color-hex');
                 if (colorHex) colorHex.textContent = value;
@@ -354,6 +397,11 @@ class DroidPageApp {
                 if (cvHex)     cvHex.textContent = value;
                 if (cvInput)   cvInput.value = value;
             }
+
+            if (name === 'header_logo_size') {
+                if (headerLogoSizeRange && e.target !== headerLogoSizeRange) headerLogoSizeRange.value = value;
+                if (headerLogoSizeNumber && e.target !== headerLogoSizeNumber) headerLogoSizeNumber.value = value;
+            }
             FormManager.updateField(name, value);
         };
 
@@ -364,8 +412,23 @@ class DroidPageApp {
             fontFamilySelect.addEventListener('change', handleFieldChange);
         }
 
+        if (headerFooterControls) {
+            headerFooterControls.addEventListener('input', handleFieldChange);
+            headerFooterControls.addEventListener('change', handleFieldChange);
+        }
+
+        if (headerLogoSizeNumber) {
+            headerLogoSizeNumber.addEventListener('input', (e) => {
+                const clamped = Math.min(96, Math.max(24, parseInt(e.target.value || '46', 10)));
+                e.target.value = clamped;
+                if (headerLogoSizeRange) headerLogoSizeRange.value = clamped;
+                FormManager.updateField('header_logo_size', String(clamped));
+            });
+        }
+
         // Image uploads
         this.setupImageUpload('icon-upload',        'app_icon_input',    'icon-preview',        'app_icon');
+        this.setupImageUpload('header-logo-upload', 'header_logo_input', 'header-logo-preview', 'header_logo');
         this.setupImageUpload('screenshot-1-upload','screenshot_1_input','screenshot-1-preview','screenshot_1');
         this.setupImageUpload('screenshot-2-upload','screenshot_2_input','screenshot-2-preview','screenshot_2');
         this.setupImageUpload('screenshot-3-upload','screenshot_3_input','screenshot-3-preview','screenshot_3');
@@ -447,6 +510,11 @@ class DroidPageApp {
     handleFormChange(data, changedField) {
         if (changedField && LIVE_THEME_FIELDS.has(changedField)) {
             Preview.updateThemeStyles(data);
+            return;
+        }
+
+        if (changedField && LIVE_CONTENT_FIELDS.has(changedField)) {
+            Preview.updateContent(data);
             return;
         }
 
