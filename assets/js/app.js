@@ -10,6 +10,9 @@ class DroidPageApp {
     }
 
     async init() {
+        // Essential theme check before anything else
+        this.applySavedTheme();
+
         this.log('Initializing form managers...');
         FormManager.init((data) => this.handleFormChange(data));
         
@@ -29,10 +32,19 @@ class DroidPageApp {
         this.setupEventListeners();
         await this.refreshPreview();
 
-        // Fade out loader
+        // Ensure all CSS is likely applied
+        this.log('Ready!');
         setTimeout(() => {
-            document.getElementById('app-loader').classList.add('hidden');
-        }, 500);
+            const loader = document.getElementById('app-loader');
+            if (loader) loader.classList.add('hidden');
+        }, 800);
+    }
+
+    applySavedTheme() {
+        const savedTheme = localStorage.getItem('droidpage_ui_theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
     }
 
     log(message) {
@@ -103,11 +115,6 @@ class DroidPageApp {
 
         // Theme management
         const themeToggle = document.getElementById('theme-toggle');
-        const savedTheme = localStorage.getItem('droidpage_ui_theme') || 'light';
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-        }
-
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-theme');
             const isDark = document.body.classList.contains('dark-theme');
