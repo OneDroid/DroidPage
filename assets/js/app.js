@@ -15,7 +15,7 @@ class DroidPageApp {
 
         this.log('Initializing form managers...');
         FormManager.init((data) => this.handleFormChange(data));
-        
+
         this.log('Connecting to preview renderer...');
         Preview.init('preview-frame');
 
@@ -33,7 +33,7 @@ class DroidPageApp {
         await this.refreshPreview();
 
         // Ensure all CSS is likely applied
-        this.log('Ready!');
+        this.log('Starting the application...');
         setTimeout(() => {
             const loader = document.getElementById('app-loader');
             if (loader) loader.classList.add('hidden');
