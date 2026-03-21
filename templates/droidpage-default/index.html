@@ -4,227 +4,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Jotter - A modern, open-source offline-first note-taking app.">
-    <title>Jotter | Open Apps Labs</title>
+    <meta name="description" content="{{meta_description}}">
+    <title>{{meta_title}}</title>
 
-    <link rel="stylesheet" href="../../assets/css/global.css">
-    <link rel="icon" type="image/svg+xml" href="../../assets/icons/code-xml.svg">
-
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto+Mono:wght@400;500;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <script src="../../assets/js/components.js" defer></script>
 
-    <style>
-        .jotter-specs {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-        }
+    <!-- Global base styles (resets, container, color tokens) -->
+    <link rel="stylesheet" href="../../assets/css/global.css">
 
-        .privacy-link-wrapper {
-            margin-bottom: 60px;
-            text-align: center;
-        }
+    <!-- Theme styles -->
+    <link rel="stylesheet" href="assets/css/theme.css">
 
-        .privacy-link {
-            font-family: var(--font-mono);
-            color: var(--text-secondary);
-            font-size: .85rem;
-            text-decoration: underline;
-            transition: color .2s;
-        }
-
-        .privacy-link:hover {
-            color: var(--text-primary);
-        }
-
-        @media(max-width: 768px) {
-            .jotter-specs {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 2.8rem;
-            }
-        }
-
-        /* Screenshots Section */
-        .screenshots-section {
-            margin-bottom: 100px;
-            position: relative;
-        }
-
-        .screenshot-carousel-wrapper {
-            position: relative;
-            padding: 0 40px;
-            /* Space for arrows */
-        }
-
-        .screenshot-carousel {
-            display: flex;
-            overflow-x: auto;
-            gap: 20px;
-            padding: 20px 0 40px;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            scroll-behavior: smooth;
-        }
-
-        .screenshot-carousel::-webkit-scrollbar {
-            display: none;
-        }
-
-        .screenshot-item {
-            flex: 0 0 280px;
-            aspect-ratio: 9 / 19;
-            scroll-snap-align: start;
-            border-radius: 32px;
-            overflow: hidden;
-            border: 4px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #000;
-            position: relative;
-        }
-
-        .screenshot-item:hover {
-            transform: translateY(-12px) scale(1.02);
-            border-color: var(--text-primary);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-        }
-
-        .screenshot-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Mobile Adjustments */
-        @media(max-width: 768px) {
-            .screenshot-carousel-wrapper {
-                padding: 0;
-            }
-
-            .screenshot-item {
-                flex: 0 0 220px;
-            }
-
-            .screenshot-nav {
-                display: none;
-            }
-        }
-
-        /* Navigation Arrows */
-        .screenshot-nav {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            transform: translateY(-50%);
-            display: flex;
-            justify-content: space-between;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .nav-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            pointer-events: auto;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-btn:hover {
-            background: var(--text-primary);
-            color: var(--bg-color);
-            transform: scale(1.1);
-        }
-
-        .nav-btn svg {
-            width: 24px;
-            height: 24px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        /* Lightbox Modal */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            cursor: zoom-out;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .lightbox.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .lightbox-content {
-            max-width: 90%;
-            max-height: 90vh;
-            border-radius: 20px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: default;
-        }
-
-        .lightbox.active .lightbox-content {
-            transform: scale(1);
-        }
-
-        .screenshot-item {
-            cursor: zoom-in;
-        }
-    </style>
+    <!-- Renderer-injected theme vars — read by theme.js, formatter-safe -->
+    <script type="application/json" id="theme-vars">{"--font-choice":"{{font_family}}","--primary-color":"{{primary_color}}","--bg-color":"{{bg_color}}","--text-primary":"{{text_primary}}","--text-secondary":"{{text_secondary}}","--card-bg":"{{card_bg}}","--border-color":"{{border_color}}","--header-bg":"{{header_bg}}","--footer-bg":"{{footer_bg}}","--container-max-width":"{{max_width}}px"}</script>
 </head>
 
 <body>
-    <site-nav root="../../"></site-nav>
 
-    <div class="container main-content">
-        <hero-section root="../../" page="jotter"></hero-section>
+    <!-- ══════════════════════════════════════════════════════
+         HEADER — full-width bg, inner content max-width
+    ══════════════════════════════════════════════════════ -->
+    <header class="site-header">
+        <div class="container">
+            <a href="#" class="header-logo">{{app_name}}</a>
 
-        <jotter-specs root="../../"></jotter-specs>
+            <nav>
+                <ul class="header-nav">
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#screenshots">Screenshots</a></li>
+                    <li><a href="./privacy">Privacy</a></li>
+                    <li>
+                        <a href="{{play_store_link}}" class="nav-cta" target="_blank" rel="noopener">
+                            Get the App
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-        <screenshot-carousel root="../../"></screenshot-carousel>
+    <!-- ══════════════════════════════════════════════════════
+         MAIN CONTENT
+    ══════════════════════════════════════════════════════ -->
+    <main>
 
-        <feature-grid root="../../"></feature-grid>
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-badge">Now Available on Google Play</div>
+                <h1>{{app_name}}</h1>
+                <p class="hero-tagline">{{tagline}}</p>
+                <div class="hero-actions">
+                    <a href="{{play_store_link}}" class="btn btn-primary" target="_blank" rel="noopener">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Get it on Play Store
+                    </a>
+                    <a href="#screenshots" class="btn btn-secondary">
+                        See Screenshots
+                    </a>
+                </div>
+            </div>
+        </section>
 
+        <!-- About / Description -->
+        <section class="about-section">
+            <div class="container">
+                <div class="about-grid">
+                    <div>
+                        <h2>Built for the modern thinker.</h2>
+                        <p>{{description}}</p>
+                    </div>
+                    <aside class="spec-card">
+                        <div class="spec-version">Version 1.0.0</div>
+                        <p>Offline first, open-source, and always under your control.</p>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screenshots -->
+        <section class="screenshots-section" id="screenshots">
+            <div class="container">
+                <span class="section-label">In Action</span>
+                <h2 class="section-title">Look Inside</h2>
+            </div>
+
+            <div class="container">
+                <div class="screenshot-carousel-wrapper">
+                    <div class="screenshot-carousel" id="screenshot-carousel">
+                        <div class="screenshot-item">
+                            <img src="{{screenshot_1}}" alt="App Screenshot 1" loading="lazy">
+                        </div>
+                        <div class="screenshot-item">
+                            <img src="{{screenshot_2}}" alt="App Screenshot 2" loading="lazy">
+                        </div>
+                        <div class="screenshot-item">
+                            <img src="{{screenshot_3}}" alt="App Screenshot 3" loading="lazy">
+                        </div>
+                    </div>
+
+                    <!-- Carousel navigation arrows -->
+                    <div class="screenshot-nav" aria-hidden="true">
+                        <button class="nav-btn" id="carousel-prev" aria-label="Previous screenshot">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <button class="nav-btn" id="carousel-next" aria-label="Next screenshot">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="features-section">
+            <div class="container">
+                <span class="section-label">Why choose us</span>
+                <h2 class="section-title">Everything you need.</h2>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+                            </svg>
+                        </div>
+                        <h3>Fast &amp; Offline</h3>
+                        <p>Access your content anytime, anywhere — no internet required. Data lives on your device.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+                                <line x1="9" y1="9" x2="9.01" y2="9"></line>
+                                <line x1="15" y1="9" x2="15.01" y2="9"></line>
+                            </svg>
+                        </div>
+                        <h3>Clean UI</h3>
+                        <p>Distraction-free interface designed for focused, productive work.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path
+                                    d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3>Open Source</h3>
+                        <p>Your data, your code. Fully transparent and community-driven.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Privacy Link -->
         <div class="privacy-link-wrapper">
             <a href="./privacy" class="privacy-link">View Privacy Policy</a>
         </div>
-    </div>
 
-    <site-footer root="../../"></site-footer>
+    </main>
 
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox">
+    <!-- ══════════════════════════════════════════════════════
+         FOOTER — full-width bg, inner content max-width
+    ══════════════════════════════════════════════════════ -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-inner">
+                <div>
+                    <a href="#" class="footer-brand">{{app_name}}</a>
+                    <p class="footer-tagline">{{tagline}}</p>
+                </div>
+                <nav>
+                    <ul class="footer-links">
+                        <li><a href="{{play_store_link}}" target="_blank" rel="noopener">Play Store</a></li>
+                        <li><a href="./privacy">Privacy Policy</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="footer-bottom">
+                &copy; 2025 {{app_name}}. Powered by <a href="https://github.com/OneDroid/DroidPage" target="_blank"
+                    style="color: inherit; text-decoration: underline;">DroidPage</a>.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot preview">
         <img class="lightbox-content" id="lightboxImg" src="" alt="Enlarged Screenshot">
     </div>
+
+    <!-- Theme Script -->
+    <script src="assets/js/theme.js" defer></script>
 
 </body>
 

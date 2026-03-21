@@ -8,9 +8,18 @@ export const FormManager = {
         screenshot_2: '',
         screenshot_3: '',
         play_store_link: 'https://play.google.com/store',
-        primary_color: '#3498db',
-        meta_title: '',
-        meta_description: ''
+        font_family: 'inter',
+        primary_color: '#3b82f6',
+        bg_color: '#ffffff',
+        text_primary: '#0f172a',
+        text_secondary: '#64748b',
+        card_bg: '#f8fafc',
+        border_color: '#e2e8f0',
+        header_bg: '#0f172a',
+        footer_bg: '#020617',
+        max_width: '1200',
+        meta_title: 'My App | Download on Google Play',
+        meta_description: 'Download my app on Google Play.'
     },
 
     init(onChange) {
@@ -28,7 +37,7 @@ export const FormManager = {
     updateField(name, value) {
         this.formData[name] = value;
         this.save();
-        if (this.onChange) this.onChange(this.formData);
+        if (this.onChange) this.onChange(this.formData, name);
     },
 
     async handleImageUpload(name, file) {

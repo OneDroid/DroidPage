@@ -210,7 +210,7 @@ body {
 .builder-container {
     flex: 1;
     display: grid;
-    grid-template-columns: 380px 1fr;
+    grid-template-columns: 25vw 1fr;
     gap: 0;
     overflow: hidden;
 }
@@ -220,7 +220,7 @@ body {
     background-color: var(--sidebar-bg);
     backdrop-filter: var(--glass-blur);
     border-right: 1px solid var(--border-color);
-    padding: 24px;
+    padding: 10px;
     overflow-y: auto;
     overflow-x: visible;
     /* Added to keep toggle button visible */
@@ -228,6 +228,12 @@ body {
     position: relative;
     min-width: 0;
     transition: var(--transition), width 0.3s ease, padding 0.3s ease;
+}
+
+.sidebar-pre-init .builder-container,
+.sidebar-pre-init .sidebar,
+.sidebar-pre-init #sidebar-toggle {
+    transition: none !important;
 }
 
 /* Resizer Handle */
@@ -279,19 +285,20 @@ body {
 .header-toggle-btn {
     width: 34px;
     height: 34px;
-    background: transparent;
-    border: none;
-    border-radius: var(--radius-sm);
+    background-color: var(--secondary-color);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: var(--text-secondary);
-    transition: all 0.2s;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
 }
 
 .header-toggle-btn:hover {
-    background: var(--secondary-hover);
+    background: rgba(0, 0, 0, 0.05);
+    border-color: transparent;
     color: var(--text-primary);
 }
 
@@ -333,16 +340,97 @@ body {
     transition: none !important;
 }
 
-.sidebar h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: var(--text-primary);
+.sidebar section {
+    margin-bottom: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: var(--transition);
 }
 
-.sidebar section {
-    margin-bottom: 40px;
+/* ── Collapsible Section Header ── */
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--card-bg);
+    transition: background 0.15s;
 }
+
+.section-header:hover {
+    background: var(--secondary-hover);
+}
+
+.section-header h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.section-chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--text-secondary);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.sidebar section.collapsed .section-chevron {
+    transform: rotate(-90deg);
+}
+
+/* ── Collapsible Section Body ── */
+.section-body {
+    padding: 16px;
+    border-top: 1px solid var(--border-color);
+    background: var(--sidebar-bg);
+    overflow: hidden;
+    max-height: 2000px;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                padding 0.25s ease,
+                opacity 0.25s ease;
+    opacity: 1;
+}
+
+.sidebar section.collapsed .section-body {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-top-color: transparent;
+    opacity: 0;
+}
+
+.section-copy {
+    margin-bottom: 14px;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.section-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+}
+
+.section-action-btn {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+}
+
+/* Keep old margin for form-groups inside section-body */
+.section-body .form-group {
+    margin-bottom: 16px;
+}
+.section-body .form-group:last-child {
+    margin-bottom: 0;
+}
+
 
 /* Theme List Grid */
 .theme-grid {
@@ -396,6 +484,46 @@ body {
     text-align: center;
 }
 
+.color-vars-grid {
+    display: grid;
+    gap: 12px;
+}
+
+.color-var-item label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.color-var-swatch {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+}
+
+.color-swatch-preview {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 0 1px var(--border-color);
+    flex-shrink: 0;
+}
+
+.color-swatch-hex {
+    flex: 1;
+    font-family: 'JetBrains Mono', 'Monaco', 'Cascadia Code', monospace;
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
 /* Form Styling */
 .form-group {
     margin-bottom: 20px;
@@ -411,6 +539,8 @@ body {
 
 .form-group input[type="text"],
 .form-group input[type="url"],
+.form-group input[type="number"],
+.form-group select,
 .form-group textarea {
     width: 100%;
     padding: 12px;
@@ -423,6 +553,7 @@ body {
 }
 
 .form-group input:focus,
+.form-group select:focus,
 .form-group textarea:focus {
     outline: none;
     border-color: var(--primary-color);
@@ -670,4 +801,90 @@ input[type="color"] {
 .action-group .btn-secondary:hover {
     background: rgba(0, 0, 0, 0.05);
     color: var(--text-primary);
+}
+
+/* ── Theme Color Customization Section ──────────────────────── */
+.theme-colors-section {
+    display: none; /* shown dynamically when a theme has colorVars */
+}
+
+.theme-colors-section.visible {
+    display: block;
+}
+
+.color-vars-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.color-var-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.color-var-item label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.color-var-swatch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 6px 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    position: relative;
+}
+
+.color-var-swatch:hover {
+    border-color: var(--primary-color);
+}
+
+.color-var-swatch input[type="color"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.color-swatch-preview {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+    flex-shrink: 0;
+    transition: background-color 0.15s;
+}
+
+.color-swatch-hex {
+    font-size: 0.72rem;
+    font-family: 'JetBrains Mono', 'Monaco', monospace;
+    color: var(--text-secondary);
+    letter-spacing: 0.02em;
+}
+
+/* Full-width color var items (span 2 cols) */
+.color-var-item.full-width {
+    grid-column: 1 / -1;
+}
+
+@media (max-width: 1200px) {
+    .color-vars-grid {
+        grid-template-columns: 1fr;
+    }
 }
