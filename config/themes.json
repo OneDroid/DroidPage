@@ -3,7 +3,7 @@
     "id": "droidpage-default",
     "name": "DroidPage Default",
     "description": "The official DroidPage default theme.",
-    "thumbnail": "templates/droidpage-default/assets/screenshots/notes_list.png",
+    "thumbnail": "templates/droidpage-default/public/media/previews/notes_list.png",
     "path": "templates/droidpage-default/",
     "features": ["maxWidth"],
     "colorVars": [

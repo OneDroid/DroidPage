@@ -31,6 +31,10 @@ const LIVE_CONTENT_FIELDS = new Set([
     'header_logo',
     'header_logo_title',
     'header_logo_subtitle',
+    'show_header_logo_title',
+    'show_header_logo_subtitle',
+    'show_header_nav_cta',
+    'header_nav_items',
     'header_nav_link_1_label',
     'header_nav_link_1_url',
     'header_nav_link_2_label',
@@ -52,6 +56,7 @@ const LIVE_CONTENT_FIELDS = new Set([
 
 class DroidPageApp {
     constructor() {
+        this.collapsedNavItems = new Set();
         document.body.classList.add('sidebar-pre-init');
         this.init();
     }
@@ -204,6 +209,232 @@ class DroidPageApp {
         this.populateForm(FormManager.formData);
     }
 
+    createNavItem(label = 'New Link', url = '#') {
+        return {
+            id: `nav_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            label,
+            url,
+            subitems: []
+        };
+    }
+
+    createNavSubitem(label = 'Sub Link', url = '#') {
+        return {
+            id: `subnav_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            label,
+            url
+        };
+    }
+
+    getHeaderNavItems() {
+        try {
+            const parsed = JSON.parse(FormManager.formData.header_nav_items || '[]');
+            if (!Array.isArray(parsed)) return [];
+
+            return parsed.map((item, index) => ({
+                id: item.id || `nav_${index}`,
+                label: item.label || 'New Link',
+                url: item.url || '#',
+                subitems: Array.isArray(item.subitems)
+                    ? item.subitems.map((subitem, subIndex) => ({
+                        id: subitem.id || `subnav_${index}_${subIndex}`,
+                        label: subitem.label || 'Sub Link',
+                        url: subitem.url || '#'
+                    }))
+                    : []
+            }));
+        } catch (error) {
+            console.error('Error parsing header nav items:', error);
+            return [];
+        }
+    }
+
+    saveHeaderNavItems(items) {
+        FormManager.updateField('header_nav_items', JSON.stringify(items));
+    }
+
+    escapeHtml(value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    renderHeaderNavItemsEditor() {
+        const container = document.getElementById('header-nav-items-editor');
+        if (!container) return;
+
+        const items = this.getHeaderNavItems();
+        if (this.collapsedNavItems.size === 0) {
+            items.forEach((item) => this.collapsedNavItems.add(item.id));
+        }
+        container.innerHTML = '';
+
+        items.forEach((item) => {
+            const isCollapsed = this.collapsedNavItems.has(item.id);
+            const safeLabel = this.escapeHtml(item.label || '');
+            const safeUrl = this.escapeHtml(item.url || '');
+            const card = document.createElement('article');
+            card.className = `nav-item-card${isCollapsed ? ' collapsed' : ''}`;
+            card.draggable = true;
+            card.dataset.id = item.id;
+            card.innerHTML = `
+                <div class="nav-item-header">
+                    <button type="button" class="nav-item-handle" title="Drag to reorder" aria-label="Drag to reorder">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="9" cy="7" r="1.4"></circle>
+                            <circle cx="15" cy="7" r="1.4"></circle>
+                            <circle cx="9" cy="12" r="1.4"></circle>
+                            <circle cx="15" cy="12" r="1.4"></circle>
+                            <circle cx="9" cy="17" r="1.4"></circle>
+                            <circle cx="15" cy="17" r="1.4"></circle>
+                        </svg>
+                    </button>
+                    <div class="nav-item-title">
+                        <span class="nav-item-label">${safeLabel || 'New Link'}</span>
+                        <span class="nav-item-url">${safeUrl || '#'}</span>
+                    </div>
+                    <button type="button" class="nav-item-toggle" title="${isCollapsed ? 'Open item' : 'Collapse item'}" aria-label="${isCollapsed ? 'Open item' : 'Collapse item'}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <polyline points="8 10 12 14 16 10"></polyline>
+                        </svg>
+                    </button>
+                    <button type="button" class="nav-item-remove" title="Remove item" aria-label="Remove item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M9 3h6"></path>
+                            <path d="M4 7h16"></path>
+                            <path d="M6 7l1 13h10l1-13"></path>
+                            <path d="M10 11v5"></path>
+                            <path d="M14 11v5"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="nav-item-body">
+                    <div class="form-group">
+                        <label>Link Label</label>
+                        <input type="text" value="${safeLabel}" data-nav-id="${item.id}" data-nav-field="label">
+                    </div>
+                    <div class="form-group">
+                        <label>Link URL</label>
+                        <input type="text" value="${safeUrl}" data-nav-id="${item.id}" data-nav-field="url">
+                    </div>
+                </div>
+            `;
+
+            const labelInput = card.querySelector('[data-nav-field="label"]');
+            const urlInput = card.querySelector('[data-nav-field="url"]');
+            const labelPreview = card.querySelector('.nav-item-label');
+            const urlPreview = card.querySelector('.nav-item-url');
+            const header = card.querySelector('.nav-item-header');
+            const toggleButton = card.querySelector('.nav-item-toggle');
+            const removeButton = card.querySelector('.nav-item-remove');
+            const handleButton = card.querySelector('.nav-item-handle');
+
+            labelInput.addEventListener('input', (e) => {
+                const nextItems = this.getHeaderNavItems().map((navItem) => (
+                    navItem.id === item.id ? { ...navItem, label: e.target.value } : navItem
+                ));
+                labelPreview.textContent = e.target.value || 'New Link';
+                this.saveHeaderNavItems(nextItems);
+            });
+
+            urlInput.addEventListener('input', (e) => {
+                const nextItems = this.getHeaderNavItems().map((navItem) => (
+                    navItem.id === item.id ? { ...navItem, url: e.target.value } : navItem
+                ));
+                urlPreview.textContent = e.target.value || '#';
+                this.saveHeaderNavItems(nextItems);
+            });
+
+            [labelInput, urlInput].forEach((input) => {
+                input.addEventListener('click', (e) => e.stopPropagation());
+                input.addEventListener('mousedown', (e) => e.stopPropagation());
+                input.addEventListener('focus', () => {
+                    if (!input.dataset.autoselected) {
+                        input.select();
+                        input.dataset.autoselected = 'true';
+                    }
+                });
+                input.addEventListener('blur', () => {
+                    delete input.dataset.autoselected;
+                });
+            });
+
+            const syncToggleState = () => {
+                const currentlyCollapsed = card.classList.contains('collapsed');
+                toggleButton.title = currentlyCollapsed ? 'Open item' : 'Collapse item';
+                toggleButton.setAttribute('aria-label', currentlyCollapsed ? 'Open item' : 'Collapse item');
+            };
+
+            const toggleCollapsed = () => {
+                if (this.collapsedNavItems.has(item.id)) {
+                    this.collapsedNavItems.delete(item.id);
+                } else {
+                    this.collapsedNavItems.add(item.id);
+                }
+                card.classList.toggle('collapsed');
+                syncToggleState();
+            };
+
+            syncToggleState();
+
+            header.addEventListener('click', (e) => {
+                if (e.target.closest('.nav-item-remove') || e.target.closest('.nav-item-handle')) return;
+                toggleCollapsed();
+            });
+
+            toggleButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleCollapsed();
+            });
+
+            removeButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const nextItems = this.getHeaderNavItems().filter((navItem) => navItem.id !== item.id);
+                this.collapsedNavItems.delete(item.id);
+                this.saveHeaderNavItems(nextItems);
+                this.renderHeaderNavItemsEditor();
+            });
+
+            handleButton.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+            });
+
+            card.addEventListener('dragstart', () => {
+                card.classList.add('dragging');
+            });
+
+            card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+            });
+
+            card.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            card.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedId = container.querySelector('.nav-item-card.dragging')?.dataset.id;
+                const targetId = card.dataset.id;
+                if (!draggedId || !targetId || draggedId === targetId) return;
+
+                const nextItems = this.getHeaderNavItems();
+                const fromIndex = nextItems.findIndex((navItem) => navItem.id === draggedId);
+                const toIndex = nextItems.findIndex((navItem) => navItem.id === targetId);
+                if (fromIndex === -1 || toIndex === -1) return;
+
+                const [movedItem] = nextItems.splice(fromIndex, 1);
+                nextItems.splice(toIndex, 0, movedItem);
+                this.saveHeaderNavItems(nextItems);
+                this.renderHeaderNavItemsEditor();
+            });
+
+            container.appendChild(card);
+        });
+    }
+
     /* ── Form Population ─────────────────────────────────── */
     populateForm(data) {
         Object.keys(data).forEach(key => {
@@ -238,6 +469,7 @@ class DroidPageApp {
         if (data.screenshot_1) this.showPreview('screenshot-1-preview', data.screenshot_1);
         if (data.screenshot_2) this.showPreview('screenshot-2-preview', data.screenshot_2);
         if (data.screenshot_3) this.showPreview('screenshot-3-preview', data.screenshot_3);
+        this.renderHeaderNavItemsEditor();
     }
 
     showPreview(imgId, src) {
@@ -416,6 +648,14 @@ class DroidPageApp {
             headerFooterControls.addEventListener('input', handleFieldChange);
             headerFooterControls.addEventListener('change', handleFieldChange);
         }
+
+        document.getElementById('add-header-nav-item-btn')?.addEventListener('click', () => {
+            const newItem = this.createNavItem();
+            this.collapsedNavItems.add(newItem.id);
+            const nextItems = [...this.getHeaderNavItems(), newItem];
+            this.saveHeaderNavItems(nextItems);
+            this.renderHeaderNavItemsEditor();
+        });
 
         if (headerLogoSizeNumber) {
             headerLogoSizeNumber.addEventListener('input', (e) => {

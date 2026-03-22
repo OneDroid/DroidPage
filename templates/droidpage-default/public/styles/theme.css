@@ -97,6 +97,10 @@ body {
 
 .header-brand:hover { opacity: 0.85; }
 
+.is-hidden {
+    display: none !important;
+}
+
 .header-nav {
     display: flex;
     align-items: center;
@@ -104,6 +108,10 @@ body {
     list-style: none;
     flex-wrap: wrap;
     justify-content: flex-end;
+}
+
+.header-nav > li {
+    position: relative;
 }
 
 .header-nav a {
@@ -114,6 +122,49 @@ body {
     transition: color 0.2s;
 }
 .header-nav a:hover { color: #fff; }
+
+.header-nav-item.has-subnav > a::after {
+    content: ' +';
+    font-size: 0.72rem;
+    opacity: 0.75;
+}
+
+.header-subnav {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 0;
+    min-width: 220px;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: color-mix(in srgb, var(--header-bg, #0f172a) 88%, #08111f);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.25);
+    list-style: none;
+    display: grid;
+    gap: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+}
+
+.header-subnav a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 0.84rem;
+}
+
+.header-subnav a:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.header-nav-item.has-subnav:hover .header-subnav,
+.header-nav-item.has-subnav:focus-within .header-subnav {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
 
 .header-nav .nav-cta {
     background: var(--primary-color, #3b82f6);
@@ -136,6 +187,16 @@ body {
     }
 
     .header-nav { gap: 20px; }
+    .header-subnav {
+        position: static;
+        min-width: 0;
+        margin-top: 10px;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        background: rgba(255, 255, 255, 0.03);
+        box-shadow: none;
+    }
     .header-nav .nav-cta { display: none; }
     .header-brand-subtitle { max-width: none; }
 }

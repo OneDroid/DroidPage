@@ -310,42 +310,40 @@
                     </div>
                     <div class="form-group">
                         <label for="header_logo_title">Header Logo Title</label>
-                        <input type="text" id="header_logo_title" name="header_logo_title" placeholder="Defaults to App Name">
+                        <div class="field-with-toggle">
+                            <span class="inline-check">
+                                <input type="checkbox" id="show_header_logo_title" name="show_header_logo_title" checked>
+                            </span>
+                            <input type="text" id="header_logo_title" name="header_logo_title" placeholder="Defaults to App Name">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="header_logo_subtitle">Header Logo Subtitle</label>
-                        <input type="text" id="header_logo_subtitle" name="header_logo_subtitle" placeholder="Defaults to Tagline">
+                        <div class="field-with-toggle">
+                            <span class="inline-check">
+                                <input type="checkbox" id="show_header_logo_subtitle" name="show_header_logo_subtitle" checked>
+                            </span>
+                            <input type="text" id="header_logo_subtitle" name="header_logo_subtitle" placeholder="Defaults to Tagline">
+                        </div>
                     </div>
 
                     <div class="subsection-title">Navbar</div>
+                    <div class="section-copy">
+                        Click a nav card to open it, drag to reorder links, and add as many nav items as you need.
+                    </div>
+                    <div id="header-nav-items-editor" class="nav-items-editor"></div>
+                    <div class="section-actions nav-editor-actions">
+                        <button type="button" id="add-header-nav-item-btn" class="btn btn-secondary section-action-btn">Add Nav Item</button>
+                    </div>
                     <div class="link-grid">
                         <div class="form-group">
-                            <label for="header_nav_link_1_label">Link 1 Label</label>
-                            <input type="text" id="header_nav_link_1_label" name="header_nav_link_1_label">
-                        </div>
-                        <div class="form-group">
-                            <label for="header_nav_link_1_url">Link 1 URL</label>
-                            <input type="text" id="header_nav_link_1_url" name="header_nav_link_1_url">
-                        </div>
-                        <div class="form-group">
-                            <label for="header_nav_link_2_label">Link 2 Label</label>
-                            <input type="text" id="header_nav_link_2_label" name="header_nav_link_2_label">
-                        </div>
-                        <div class="form-group">
-                            <label for="header_nav_link_2_url">Link 2 URL</label>
-                            <input type="text" id="header_nav_link_2_url" name="header_nav_link_2_url">
-                        </div>
-                        <div class="form-group">
-                            <label for="header_nav_link_3_label">Link 3 Label</label>
-                            <input type="text" id="header_nav_link_3_label" name="header_nav_link_3_label">
-                        </div>
-                        <div class="form-group">
-                            <label for="header_nav_link_3_url">Link 3 URL</label>
-                            <input type="text" id="header_nav_link_3_url" name="header_nav_link_3_url">
-                        </div>
-                        <div class="form-group">
                             <label for="header_nav_cta_label">CTA Label</label>
-                            <input type="text" id="header_nav_cta_label" name="header_nav_cta_label">
+                            <div class="field-with-toggle">
+                                <span class="inline-check">
+                                    <input type="checkbox" id="show_header_nav_cta" name="show_header_nav_cta" checked>
+                                </span>
+                                <input type="text" id="header_nav_cta_label" name="header_nav_cta_label">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="header_nav_cta_url">CTA URL</label>

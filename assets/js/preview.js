@@ -7,6 +7,27 @@ export const Preview = {
         'dm-sans': "'DM Sans', 'Inter', sans-serif",
         lora: "'Lora', Georgia, serif"
     },
+    buildHeaderNavMarkup(items) {
+        return items.map((item) => {
+            const subitems = Array.isArray(item.subitems) ? item.subitems : [];
+            const subitemsMarkup = subitems.length
+                ? `
+                    <ul class="header-subnav">
+                        ${subitems.map((subitem) => `
+                            <li><a href="${subitem.url || '#'}">${subitem.label || 'Sub Link'}</a></li>
+                        `).join('')}
+                    </ul>
+                `
+                : '';
+
+            return `
+                <li class="header-nav-item${subitems.length ? ' has-subnav' : ''}">
+                    <a href="${item.url || '#'}">${item.label || 'New Link'}</a>
+                    ${subitemsMarkup}
+                </li>
+            `;
+        }).join('');
+    },
 
     init(iframeId) {
         this.iframe = document.getElementById(iframeId);
@@ -148,27 +169,41 @@ export const Preview = {
             if (el) el.setAttribute('href', href || '#');
         };
 
+        let headerNavItems = [];
+        try {
+            headerNavItems = JSON.parse(data.header_nav_items || '[]');
+        } catch (error) {
+            console.error('Error parsing header nav items for preview:', error);
+        }
+
         setText('header-brand-title', data.header_logo_title || appName);
         setText('header-brand-subtitle', data.header_logo_subtitle || tagline);
         setText('footer-brand-title', data.footer_brand_title || appName);
         setText('footer-brand-subtitle', data.footer_brand_subtitle || tagline);
         setHtml('footer-bottom', footerBottomText);
 
-        setText('header-nav-link-1', data.header_nav_link_1_label || '');
-        setText('header-nav-link-2', data.header_nav_link_2_label || '');
-        setText('header-nav-link-3', data.header_nav_link_3_label || '');
-        setText('header-nav-cta', data.header_nav_cta_label || '');
         setText('footer-link-1', data.footer_link_1_label || '');
         setText('footer-link-2', data.footer_link_2_label || '');
         setText('footer-link-3', data.footer_link_3_label || '');
 
-        setHref('header-nav-link-1', data.header_nav_link_1_url);
-        setHref('header-nav-link-2', data.header_nav_link_2_url);
-        setHref('header-nav-link-3', data.header_nav_link_3_url);
-        setHref('header-nav-cta', data.header_nav_cta_url);
         setHref('footer-link-1', data.footer_link_1_url);
         setHref('footer-link-2', data.footer_link_2_url);
         setHref('footer-link-3', data.footer_link_3_url);
+
+        const headerNavList = doc.getElementById('header-nav-list');
+        if (headerNavList) {
+            const itemsMarkup = this.buildHeaderNavMarkup(headerNavItems);
+            const ctaMarkup = data.show_header_nav_cta === 'false'
+                ? ''
+                : `
+                <li>
+                    <a href="${data.header_nav_cta_url || '#'}" class="nav-cta" target="_blank" rel="noopener" id="header-nav-cta">
+                        ${data.header_nav_cta_label || ''}
+                    </a>
+                </li>
+            `;
+            headerNavList.innerHTML = itemsMarkup + ctaMarkup;
+        }
 
         const siteHeader = doc.getElementById('site-header');
         if (siteHeader) {
@@ -177,8 +212,23 @@ export const Preview = {
         }
 
         const headerBrand = doc.getElementById('header-brand');
+        const headerBrandTitle = doc.getElementById('header-brand-title');
+        const headerBrandSubtitle = doc.getElementById('header-brand-subtitle');
         let headerLogo = headerBrand?.querySelector('.header-brand-logo');
         const headerBrandCopy = headerBrand?.querySelector('.header-brand-copy');
+
+        if (headerBrandTitle) {
+            const showTitle = data.show_header_logo_title !== 'false';
+            headerBrandTitle.classList.toggle('is-hidden', !showTitle);
+            headerBrandTitle.textContent = showTitle ? (data.header_logo_title || appName) : '';
+        }
+
+        if (headerBrandSubtitle) {
+            const showSubtitle = data.show_header_logo_subtitle !== 'false';
+            headerBrandSubtitle.classList.toggle('is-hidden', !showSubtitle);
+            headerBrandSubtitle.textContent = showSubtitle ? (data.header_logo_subtitle || tagline) : '';
+        }
+
         if (headerBrand && headerBrandCopy) {
             if (data.header_logo) {
                 if (!headerLogo) {

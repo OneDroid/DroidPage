@@ -20,14 +20,18 @@ export const FormManager = {
         sticky_header: 'true',
         header_logo: '',
         header_logo_size: '46',
+        show_header_logo_title: 'true',
+        show_header_logo_subtitle: 'true',
         header_logo_title: '',
         header_logo_subtitle: '',
+        header_nav_items: '[{"id":"nav_features","label":"Features","url":"#features"},{"id":"nav_screenshots","label":"Screenshots","url":"#screenshots"},{"id":"nav_privacy","label":"Privacy","url":"./privacy"}]',
         header_nav_link_1_label: 'Features',
         header_nav_link_1_url: '#features',
         header_nav_link_2_label: 'Screenshots',
         header_nav_link_2_url: '#screenshots',
         header_nav_link_3_label: 'Privacy',
         header_nav_link_3_url: './privacy',
+        show_header_nav_cta: 'true',
         header_nav_cta_label: 'Get the App',
         header_nav_cta_url: 'https://play.google.com/store',
         footer_brand_title: '',
@@ -52,6 +56,26 @@ export const FormManager = {
             } catch (e) {
                 console.error('Error parsing saved form data:', e);
             }
+        }
+
+        if (!this.formData.header_nav_items) {
+            this.formData.header_nav_items = JSON.stringify([
+                {
+                    id: 'nav_features',
+                    label: this.formData.header_nav_link_1_label || 'Features',
+                    url: this.formData.header_nav_link_1_url || '#features'
+                },
+                {
+                    id: 'nav_screenshots',
+                    label: this.formData.header_nav_link_2_label || 'Screenshots',
+                    url: this.formData.header_nav_link_2_url || '#screenshots'
+                },
+                {
+                    id: 'nav_privacy',
+                    label: this.formData.header_nav_link_3_label || 'Privacy',
+                    url: this.formData.header_nav_link_3_url || './privacy'
+                }
+            ]);
         }
         this.onChange = onChange;
     },

@@ -475,6 +475,169 @@ body {
     accent-color: var(--primary-color);
 }
 
+.inline-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.inline-check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-color);
+}
+
+.field-with-toggle {
+    display: grid;
+    grid-template-columns: 20px 1fr;
+    gap: 12px;
+    align-items: center;
+}
+
+.nav-items-editor {
+    display: grid;
+    gap: 12px;
+}
+
+.nav-item-card {
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--card-bg) 94%, transparent), color-mix(in srgb, var(--input-bg) 92%, transparent));
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-item-card:hover {
+    border-color: color-mix(in srgb, var(--primary-color) 35%, var(--border-color));
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+}
+
+.nav-item-card.dragging {
+    opacity: 0.55;
+    transform: rotate(1deg) scale(0.99);
+}
+
+.nav-item-header {
+    display: grid;
+    grid-template-columns: 32px 1fr 32px 32px;
+    gap: 12px;
+    align-items: center;
+    padding: 13px 14px;
+    background: linear-gradient(180deg, color-mix(in srgb, var(--card-bg) 88%, transparent), color-mix(in srgb, var(--input-bg) 92%, transparent));
+    cursor: pointer;
+}
+
+.nav-item-handle,
+.nav-item-toggle,
+.nav-item-remove {
+    border: 1px solid color-mix(in srgb, var(--border-color) 60%, transparent);
+    background: color-mix(in srgb, var(--secondary-color) 42%, transparent);
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.nav-item-handle {
+    cursor: grab;
+}
+
+.nav-item-remove:hover,
+.nav-item-toggle:hover,
+.nav-item-handle:hover {
+    color: var(--text-primary);
+    background: color-mix(in srgb, var(--card-bg) 86%, transparent);
+    border-color: color-mix(in srgb, var(--primary-color) 28%, var(--border-color));
+    transform: translateY(-1px);
+}
+
+.nav-item-remove:hover {
+    color: var(--danger-color);
+    border-color: color-mix(in srgb, var(--danger-color) 35%, var(--border-color));
+}
+
+.nav-item-title {
+    min-width: 0;
+}
+
+.nav-item-label {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-item-url {
+    display: block;
+    margin-top: 5px;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.nav-item-body {
+    padding: 14px;
+    border-top: 1px solid var(--border-color);
+    background: color-mix(in srgb, var(--input-bg) 94%, transparent);
+    display: grid;
+    gap: 12px;
+    opacity: 1;
+    max-height: 480px;
+    transition: max-height 0.25s ease, opacity 0.2s ease, padding 0.2s ease;
+}
+
+.nav-item-card.collapsed .nav-item-body {
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+}
+
+.nav-editor-actions {
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+
+.nav-item-toggle svg,
+.nav-item-remove svg,
+.nav-item-handle svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.2s ease;
+}
+
+.nav-item-handle svg {
+    stroke: none;
+    fill: currentColor;
+}
+
+.nav-item-card.collapsed .nav-item-toggle svg {
+    transform: rotate(-90deg);
+}
+
+
 /* Keep old margin for form-groups inside section-body */
 .section-body .form-group {
     margin-bottom: 16px;

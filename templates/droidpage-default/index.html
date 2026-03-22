@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../../assets/css/global.css">
 
     <!-- Theme styles -->
-    <link rel="stylesheet" href="assets/css/theme.css">
+    <link rel="stylesheet" href="public/styles/theme.css">
 
     <!-- Renderer-injected theme vars — read by theme.js, formatter-safe -->
     <script type="application/json" id="theme-vars">{"--font-choice":"{{font_family}}","--primary-color":"{{primary_color}}","--bg-color":"{{bg_color}}","--text-primary":"{{text_primary}}","--text-secondary":"{{text_secondary}}","--card-bg":"{{card_bg}}","--border-color":"{{border_color}}","--header-bg":"{{header_bg}}","--footer-bg":"{{footer_bg}}","--container-max-width":"{{max_width}}px","--header-logo-size":"{{header_logo_size}}px"}</script>
@@ -34,21 +34,15 @@
             <a href="#" class="header-brand" id="header-brand">
                 {{header_logo_markup}}
                 <span class="header-brand-copy">
-                    <span class="header-brand-title" id="header-brand-title">{{header_logo_title}}</span>
-                    <span class="header-brand-subtitle" id="header-brand-subtitle">{{header_logo_subtitle}}</span>
+                    <span class="header-brand-title {{header_logo_title_class}}" id="header-brand-title">{{header_logo_title}}</span>
+                    <span class="header-brand-subtitle {{header_logo_subtitle_class}}" id="header-brand-subtitle">{{header_logo_subtitle}}</span>
                 </span>
             </a>
 
             <nav>
-                <ul class="header-nav">
-                    <li><a href="{{header_nav_link_1_url}}" id="header-nav-link-1">{{header_nav_link_1_label}}</a></li>
-                    <li><a href="{{header_nav_link_2_url}}" id="header-nav-link-2">{{header_nav_link_2_label}}</a></li>
-                    <li><a href="{{header_nav_link_3_url}}" id="header-nav-link-3">{{header_nav_link_3_label}}</a></li>
-                    <li>
-                        <a href="{{header_nav_cta_url}}" class="nav-cta" target="_blank" rel="noopener" id="header-nav-cta">
-                            {{header_nav_cta_label}}
-                        </a>
-                    </li>
+                <ul class="header-nav" id="header-nav-list">
+                    {{header_nav_items_markup}}
+                    {{header_nav_cta_markup}}
                 </ul>
             </nav>
         </div>
@@ -212,7 +206,7 @@
     </div>
 
     <!-- Theme Script -->
-    <script src="assets/js/theme.js" defer></script>
+    <script src="public/scripts/theme.js" defer></script>
 
 </body>
 
