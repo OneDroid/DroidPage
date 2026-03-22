@@ -34,8 +34,13 @@ export const FormManager = {
         show_header_nav_cta: 'true',
         header_nav_cta_label: 'Get the App',
         header_nav_cta_url: 'https://play.google.com/store',
+        footer_logo: '',
+        footer_logo_size: '40',
+        show_footer_brand_title: 'true',
+        show_footer_brand_subtitle: 'true',
         footer_brand_title: '',
         footer_brand_subtitle: '',
+        footer_nav_items: '[{"id":"footer_play_store","label":"Play Store","url":"https://play.google.com/store"},{"id":"footer_privacy","label":"Privacy Policy","url":"./privacy"},{"id":"footer_contact","label":"Contact","url":"#"}]',
         footer_link_1_label: 'Play Store',
         footer_link_1_url: 'https://play.google.com/store',
         footer_link_2_label: 'Privacy Policy',
@@ -74,6 +79,26 @@ export const FormManager = {
                     id: 'nav_privacy',
                     label: this.formData.header_nav_link_3_label || 'Privacy',
                     url: this.formData.header_nav_link_3_url || './privacy'
+                }
+            ]);
+        }
+
+        if (!this.formData.footer_nav_items) {
+            this.formData.footer_nav_items = JSON.stringify([
+                {
+                    id: 'footer_play_store',
+                    label: this.formData.footer_link_1_label || 'Play Store',
+                    url: this.formData.footer_link_1_url || 'https://play.google.com/store'
+                },
+                {
+                    id: 'footer_privacy',
+                    label: this.formData.footer_link_2_label || 'Privacy Policy',
+                    url: this.formData.footer_link_2_url || './privacy'
+                },
+                {
+                    id: 'footer_contact',
+                    label: this.formData.footer_link_3_label || 'Contact',
+                    url: this.formData.footer_link_3_url || '#'
                 }
             ]);
         }

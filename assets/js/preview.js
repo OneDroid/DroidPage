@@ -29,6 +29,17 @@ export const Preview = {
         }).join('');
     },
 
+    buildFooterNavMarkup(items) {
+        return items.map((item) => `
+            <li><a href="${item.url || '#'}">${item.label || 'New Link'}</a></li>
+        `).join('');
+    },
+
+    getFooterBottomText(appName, customText) {
+        const prefix = customText?.trim() || `&copy; ${new Date().getFullYear()} ${appName}.`;
+        return `${prefix} Powered by <a href="https://github.com/OneDroid/DroidPage" target="_blank" style="color: inherit; text-decoration: underline;">DroidPage</a>.`;
+    },
+
     init(iframeId) {
         this.iframe = document.getElementById(iframeId);
     },
@@ -139,6 +150,10 @@ export const Preview = {
             root.style.setProperty('--header-logo-size', `${data.header_logo_size}px`);
         }
 
+        if (data.footer_logo_size) {
+            root.style.setProperty('--footer-logo-size', `${data.footer_logo_size}px`);
+        }
+
         const fontStack = this.fontStacks[data.font_family] || this.fontStacks.inter;
         root.style.setProperty('--font-sans', fontStack);
     },
@@ -151,8 +166,7 @@ export const Preview = {
 
         const appName = data.app_name || 'My Awesome App';
         const tagline = data.tagline || 'The Best Mobile Experience';
-        const footerBottomText = data.footer_bottom_text
-            || `&copy; 2025 ${appName}. Powered by <a href="https://github.com/OneDroid/DroidPage" target="_blank" style="color: inherit; text-decoration: underline;">DroidPage</a>.`;
+        const footerBottomText = this.getFooterBottomText(appName, data.footer_bottom_text);
 
         const setText = (id, value) => {
             const el = doc.getElementById(id);
@@ -170,25 +184,23 @@ export const Preview = {
         };
 
         let headerNavItems = [];
+        let footerNavItems = [];
         try {
             headerNavItems = JSON.parse(data.header_nav_items || '[]');
         } catch (error) {
             console.error('Error parsing header nav items for preview:', error);
         }
+        try {
+            footerNavItems = JSON.parse(data.footer_nav_items || '[]');
+        } catch (error) {
+            console.error('Error parsing footer nav items for preview:', error);
+        }
 
         setText('header-brand-title', data.header_logo_title || appName);
         setText('header-brand-subtitle', data.header_logo_subtitle || tagline);
-        setText('footer-brand-title', data.footer_brand_title || appName);
-        setText('footer-brand-subtitle', data.footer_brand_subtitle || tagline);
+        setText('footer-brand-title', data.show_footer_brand_title === 'false' ? '' : (data.footer_brand_title || appName));
+        setText('footer-brand-subtitle', data.show_footer_brand_subtitle === 'false' ? '' : (data.footer_brand_subtitle || tagline));
         setHtml('footer-bottom', footerBottomText);
-
-        setText('footer-link-1', data.footer_link_1_label || '');
-        setText('footer-link-2', data.footer_link_2_label || '');
-        setText('footer-link-3', data.footer_link_3_label || '');
-
-        setHref('footer-link-1', data.footer_link_1_url);
-        setHref('footer-link-2', data.footer_link_2_url);
-        setHref('footer-link-3', data.footer_link_3_url);
 
         const headerNavList = doc.getElementById('header-nav-list');
         if (headerNavList) {
@@ -203,6 +215,33 @@ export const Preview = {
                 </li>
             `;
             headerNavList.innerHTML = itemsMarkup + ctaMarkup;
+        }
+
+        const footerNavList = doc.getElementById('footer-nav-list');
+        if (footerNavList) {
+            footerNavList.innerHTML = this.buildFooterNavMarkup(footerNavItems);
+        }
+
+        const footerInner = doc.getElementById('footer-inner');
+        const footerBrandBlock = doc.getElementById('footer-brand-block');
+        const footerNavWrap = doc.getElementById('footer-nav');
+        const showFooterTitle = data.show_footer_brand_title !== 'false';
+        const showFooterSubtitle = data.show_footer_brand_subtitle !== 'false';
+        const hasFooterBrand = showFooterTitle || showFooterSubtitle || Boolean(data.footer_logo);
+        const hasFooterNav = footerNavItems.length > 0;
+
+        if (footerBrandBlock) {
+            footerBrandBlock.classList.toggle('is-hidden', !hasFooterBrand);
+        }
+
+        if (footerNavWrap) {
+            footerNavWrap.classList.toggle('is-hidden', !hasFooterNav);
+        }
+
+        if (footerInner) {
+            footerInner.classList.toggle('footer-brand-hidden', !hasFooterBrand);
+            footerInner.classList.toggle('footer-nav-hidden', !hasFooterNav);
+            footerInner.classList.toggle('is-hidden', !hasFooterBrand && !hasFooterNav);
         }
 
         const siteHeader = doc.getElementById('site-header');
@@ -227,6 +266,38 @@ export const Preview = {
             const showSubtitle = data.show_header_logo_subtitle !== 'false';
             headerBrandSubtitle.classList.toggle('is-hidden', !showSubtitle);
             headerBrandSubtitle.textContent = showSubtitle ? (data.header_logo_subtitle || tagline) : '';
+        }
+
+        const footerBrandTitle = doc.getElementById('footer-brand-title');
+        if (footerBrandTitle) {
+            const showTitle = data.show_footer_brand_title !== 'false';
+            footerBrandTitle.classList.toggle('is-hidden', !showTitle);
+            footerBrandTitle.textContent = showTitle ? (data.footer_brand_title || appName) : '';
+        }
+
+        const footerBrandSubtitle = doc.getElementById('footer-brand-subtitle');
+        if (footerBrandSubtitle) {
+            const showSubtitle = data.show_footer_brand_subtitle !== 'false';
+            footerBrandSubtitle.classList.toggle('is-hidden', !showSubtitle);
+            footerBrandSubtitle.textContent = showSubtitle ? (data.footer_brand_subtitle || tagline) : '';
+        }
+
+        const footerBrand = doc.getElementById('footer-brand');
+        const footerBrandCopy = footerBrand?.querySelector('.footer-brand-copy');
+        let footerLogo = footerBrand?.querySelector('.footer-brand-logo');
+
+        if (footerBrand && footerBrandCopy) {
+            if (data.footer_logo) {
+                if (!footerLogo) {
+                    footerLogo = doc.createElement('img');
+                    footerLogo.className = 'footer-brand-logo';
+                    footerBrand.insertBefore(footerLogo, footerBrandCopy);
+                }
+                footerLogo.src = data.footer_logo;
+                footerLogo.alt = `${data.footer_brand_title || appName} logo`;
+            } else if (footerLogo) {
+                footerLogo.remove();
+            }
         }
 
         if (headerBrand && headerBrandCopy) {

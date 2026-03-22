@@ -23,6 +23,7 @@ const LIVE_THEME_FIELDS = new Set([
     'header_bg',
     'footer_bg',
     'header_logo_size',
+    'footer_logo_size',
     'max_width'
 ]);
 
@@ -43,8 +44,12 @@ const LIVE_CONTENT_FIELDS = new Set([
     'header_nav_link_3_url',
     'header_nav_cta_label',
     'header_nav_cta_url',
+    'footer_logo',
+    'show_footer_brand_title',
+    'show_footer_brand_subtitle',
     'footer_brand_title',
     'footer_brand_subtitle',
+    'footer_nav_items',
     'footer_link_1_label',
     'footer_link_1_url',
     'footer_link_2_label',
@@ -57,6 +62,7 @@ const LIVE_CONTENT_FIELDS = new Set([
 class DroidPageApp {
     constructor() {
         this.collapsedNavItems = new Set();
+        this.collapsedFooterNavItems = new Set();
         document.body.classList.add('sidebar-pre-init');
         this.init();
     }
@@ -253,6 +259,26 @@ class DroidPageApp {
         FormManager.updateField('header_nav_items', JSON.stringify(items));
     }
 
+    getFooterNavItems() {
+        try {
+            const parsed = JSON.parse(FormManager.formData.footer_nav_items || '[]');
+            if (!Array.isArray(parsed)) return [];
+
+            return parsed.map((item, index) => ({
+                id: item.id || `footer_nav_${index}`,
+                label: item.label || 'New Link',
+                url: item.url || '#'
+            }));
+        } catch (error) {
+            console.error('Error parsing footer nav items:', error);
+            return [];
+        }
+    }
+
+    saveFooterNavItems(items) {
+        FormManager.updateField('footer_nav_items', JSON.stringify(items));
+    }
+
     escapeHtml(value) {
         return String(value || '')
             .replace(/&/g, '&amp;')
@@ -435,6 +461,179 @@ class DroidPageApp {
         });
     }
 
+    renderFooterNavItemsEditor() {
+        const container = document.getElementById('footer-nav-items-editor');
+        if (!container) return;
+
+        const items = this.getFooterNavItems();
+        if (this.collapsedFooterNavItems.size === 0) {
+            items.forEach((item) => this.collapsedFooterNavItems.add(item.id));
+        }
+        container.innerHTML = '';
+
+        items.forEach((item) => {
+            const isCollapsed = this.collapsedFooterNavItems.has(item.id);
+            const safeLabel = this.escapeHtml(item.label || '');
+            const safeUrl = this.escapeHtml(item.url || '');
+            const card = document.createElement('article');
+            card.className = `nav-item-card${isCollapsed ? ' collapsed' : ''}`;
+            card.draggable = true;
+            card.dataset.id = item.id;
+            card.innerHTML = `
+                <div class="nav-item-header">
+                    <button type="button" class="nav-item-handle" title="Drag to reorder" aria-label="Drag to reorder">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="9" cy="7" r="1.4"></circle>
+                            <circle cx="15" cy="7" r="1.4"></circle>
+                            <circle cx="9" cy="12" r="1.4"></circle>
+                            <circle cx="15" cy="12" r="1.4"></circle>
+                            <circle cx="9" cy="17" r="1.4"></circle>
+                            <circle cx="15" cy="17" r="1.4"></circle>
+                        </svg>
+                    </button>
+                    <div class="nav-item-title">
+                        <span class="nav-item-label">${safeLabel || 'New Link'}</span>
+                        <span class="nav-item-url">${safeUrl || '#'}</span>
+                    </div>
+                    <button type="button" class="nav-item-toggle" title="${isCollapsed ? 'Open item' : 'Collapse item'}" aria-label="${isCollapsed ? 'Open item' : 'Collapse item'}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <polyline points="8 10 12 14 16 10"></polyline>
+                        </svg>
+                    </button>
+                    <button type="button" class="nav-item-remove" title="Remove item" aria-label="Remove item">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M9 3h6"></path>
+                            <path d="M4 7h16"></path>
+                            <path d="M6 7l1 13h10l1-13"></path>
+                            <path d="M10 11v5"></path>
+                            <path d="M14 11v5"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="nav-item-body">
+                    <div class="form-group">
+                        <label>Link Label</label>
+                        <input type="text" value="${safeLabel}" data-footer-nav-id="${item.id}" data-footer-nav-field="label">
+                    </div>
+                    <div class="form-group">
+                        <label>Link URL</label>
+                        <input type="text" value="${safeUrl}" data-footer-nav-id="${item.id}" data-footer-nav-field="url">
+                    </div>
+                </div>
+            `;
+
+            const labelInput = card.querySelector('[data-footer-nav-field="label"]');
+            const urlInput = card.querySelector('[data-footer-nav-field="url"]');
+            const labelPreview = card.querySelector('.nav-item-label');
+            const urlPreview = card.querySelector('.nav-item-url');
+            const header = card.querySelector('.nav-item-header');
+            const toggleButton = card.querySelector('.nav-item-toggle');
+            const removeButton = card.querySelector('.nav-item-remove');
+            const handleButton = card.querySelector('.nav-item-handle');
+
+            labelInput.addEventListener('input', (e) => {
+                const nextItems = this.getFooterNavItems().map((navItem) => (
+                    navItem.id === item.id ? { ...navItem, label: e.target.value } : navItem
+                ));
+                labelPreview.textContent = e.target.value || 'New Link';
+                this.saveFooterNavItems(nextItems);
+            });
+
+            urlInput.addEventListener('input', (e) => {
+                const nextItems = this.getFooterNavItems().map((navItem) => (
+                    navItem.id === item.id ? { ...navItem, url: e.target.value } : navItem
+                ));
+                urlPreview.textContent = e.target.value || '#';
+                this.saveFooterNavItems(nextItems);
+            });
+
+            [labelInput, urlInput].forEach((input) => {
+                input.addEventListener('click', (e) => e.stopPropagation());
+                input.addEventListener('mousedown', (e) => e.stopPropagation());
+                input.addEventListener('focus', () => {
+                    if (!input.dataset.autoselected) {
+                        input.select();
+                        input.dataset.autoselected = 'true';
+                    }
+                });
+                input.addEventListener('blur', () => {
+                    delete input.dataset.autoselected;
+                });
+            });
+
+            const syncToggleState = () => {
+                const currentlyCollapsed = card.classList.contains('collapsed');
+                toggleButton.title = currentlyCollapsed ? 'Open item' : 'Collapse item';
+                toggleButton.setAttribute('aria-label', currentlyCollapsed ? 'Open item' : 'Collapse item');
+            };
+
+            const toggleCollapsed = () => {
+                if (this.collapsedFooterNavItems.has(item.id)) {
+                    this.collapsedFooterNavItems.delete(item.id);
+                } else {
+                    this.collapsedFooterNavItems.add(item.id);
+                }
+                card.classList.toggle('collapsed');
+                syncToggleState();
+            };
+
+            syncToggleState();
+
+            header.addEventListener('click', (e) => {
+                if (e.target.closest('.nav-item-remove') || e.target.closest('.nav-item-handle')) return;
+                toggleCollapsed();
+            });
+
+            toggleButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleCollapsed();
+            });
+
+            removeButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const nextItems = this.getFooterNavItems().filter((navItem) => navItem.id !== item.id);
+                this.collapsedFooterNavItems.delete(item.id);
+                this.saveFooterNavItems(nextItems);
+                this.renderFooterNavItemsEditor();
+            });
+
+            handleButton.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+            });
+
+            card.addEventListener('dragstart', () => {
+                card.classList.add('dragging');
+            });
+
+            card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+            });
+
+            card.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            card.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedId = container.querySelector('.nav-item-card.dragging')?.dataset.id;
+                const targetId = card.dataset.id;
+                if (!draggedId || !targetId || draggedId === targetId) return;
+
+                const nextItems = this.getFooterNavItems();
+                const fromIndex = nextItems.findIndex((navItem) => navItem.id === draggedId);
+                const toIndex = nextItems.findIndex((navItem) => navItem.id === targetId);
+                if (fromIndex === -1 || toIndex === -1) return;
+
+                const [movedItem] = nextItems.splice(fromIndex, 1);
+                nextItems.splice(toIndex, 0, movedItem);
+                this.saveFooterNavItems(nextItems);
+                this.renderFooterNavItemsEditor();
+            });
+
+            container.appendChild(card);
+        });
+    }
+
     /* ── Form Population ─────────────────────────────────── */
     populateForm(data) {
         Object.keys(data).forEach(key => {
@@ -447,8 +646,8 @@ class DroidPageApp {
                 }
             }
 
-            if (key === 'header_logo_size') {
-                const sizeNumberInput = document.getElementById('header_logo_size_number');
+            if (key === 'header_logo_size' || key === 'footer_logo_size') {
+                const sizeNumberInput = document.getElementById(`${key}_number`);
                 if (sizeNumberInput) sizeNumberInput.value = data[key];
             }
 
@@ -466,10 +665,12 @@ class DroidPageApp {
 
         if (data.app_icon)     this.showPreview('icon-preview', data.app_icon);
         if (data.header_logo)  this.showPreview('header-logo-preview', data.header_logo);
+        if (data.footer_logo)  this.showPreview('footer-logo-preview', data.footer_logo);
         if (data.screenshot_1) this.showPreview('screenshot-1-preview', data.screenshot_1);
         if (data.screenshot_2) this.showPreview('screenshot-2-preview', data.screenshot_2);
         if (data.screenshot_3) this.showPreview('screenshot-3-preview', data.screenshot_3);
         this.renderHeaderNavItemsEditor();
+        this.renderFooterNavItemsEditor();
     }
 
     showPreview(imgId, src) {
@@ -477,8 +678,24 @@ class DroidPageApp {
         if (img) {
             img.src = src;
             img.classList.remove('hidden');
-            const placeholder = img.nextElementSibling;
+            const container = img.closest('.image-upload, .image-upload-small');
+            const clearButton = container?.querySelector('.image-clear-btn');
+            const placeholder = container?.querySelector('.upload-placeholder, .upload-placeholder-small');
             if (placeholder) placeholder.classList.add('hidden');
+            if (clearButton) clearButton.classList.remove('hidden');
+        }
+    }
+
+    clearPreview(imgId) {
+        const img = document.getElementById(imgId);
+        if (img) {
+            img.src = '';
+            img.classList.add('hidden');
+            const container = img.closest('.image-upload, .image-upload-small');
+            const clearButton = container?.querySelector('.image-clear-btn');
+            const placeholder = container?.querySelector('.upload-placeholder, .upload-placeholder-small');
+            if (placeholder) placeholder.classList.remove('hidden');
+            if (clearButton) clearButton.classList.add('hidden');
         }
     }
 
@@ -513,6 +730,8 @@ class DroidPageApp {
         const headerFooterControls = document.getElementById('header-footer-controls');
         const headerLogoSizeRange = document.getElementById('header_logo_size');
         const headerLogoSizeNumber = document.getElementById('header_logo_size_number');
+        const footerLogoSizeRange = document.getElementById('footer_logo_size');
+        const footerLogoSizeNumber = document.getElementById('footer_logo_size_number');
 
         // App UI theme toggle (light/dark)
         const themeToggle = document.getElementById('theme-toggle');
@@ -540,7 +759,6 @@ class DroidPageApp {
             if (width < 30) {
                 builderContainer.style.gridTemplateColumns = `0px 1fr`;
                 sidebarToggle.classList.add('collapsed');
-                sidebar.style.padding = '0';
             } else {
                 builderContainer.style.gridTemplateColumns = `${width}px 1fr`;
                 sidebarToggle.classList.remove('collapsed');
@@ -630,9 +848,11 @@ class DroidPageApp {
                 if (cvInput)   cvInput.value = value;
             }
 
-            if (name === 'header_logo_size') {
-                if (headerLogoSizeRange && e.target !== headerLogoSizeRange) headerLogoSizeRange.value = value;
-                if (headerLogoSizeNumber && e.target !== headerLogoSizeNumber) headerLogoSizeNumber.value = value;
+            if (name === 'header_logo_size' || name === 'footer_logo_size') {
+                const rangeInput = name === 'header_logo_size' ? headerLogoSizeRange : footerLogoSizeRange;
+                const numberInput = name === 'header_logo_size' ? headerLogoSizeNumber : footerLogoSizeNumber;
+                if (rangeInput && e.target !== rangeInput) rangeInput.value = value;
+                if (numberInput && e.target !== numberInput) numberInput.value = value;
             }
             FormManager.updateField(name, value);
         };
@@ -657,6 +877,14 @@ class DroidPageApp {
             this.renderHeaderNavItemsEditor();
         });
 
+        document.getElementById('add-footer-nav-item-btn')?.addEventListener('click', () => {
+            const newItem = this.createNavItem();
+            this.collapsedFooterNavItems.add(newItem.id);
+            const nextItems = [...this.getFooterNavItems(), newItem];
+            this.saveFooterNavItems(nextItems);
+            this.renderFooterNavItemsEditor();
+        });
+
         if (headerLogoSizeNumber) {
             headerLogoSizeNumber.addEventListener('input', (e) => {
                 const clamped = Math.min(96, Math.max(24, parseInt(e.target.value || '46', 10)));
@@ -666,9 +894,19 @@ class DroidPageApp {
             });
         }
 
+        if (footerLogoSizeNumber) {
+            footerLogoSizeNumber.addEventListener('input', (e) => {
+                const clamped = Math.min(96, Math.max(24, parseInt(e.target.value || '40', 10)));
+                e.target.value = clamped;
+                if (footerLogoSizeRange) footerLogoSizeRange.value = clamped;
+                FormManager.updateField('footer_logo_size', String(clamped));
+            });
+        }
+
         // Image uploads
         this.setupImageUpload('icon-upload',        'app_icon_input',    'icon-preview',        'app_icon');
-        this.setupImageUpload('header-logo-upload', 'header_logo_input', 'header-logo-preview', 'header_logo');
+        this.setupImageUpload('header-logo-upload', 'header_logo_input', 'header-logo-preview', 'header_logo', 'header-logo-clear-btn');
+        this.setupImageUpload('footer-logo-upload', 'footer_logo_input', 'footer-logo-preview', 'footer_logo', 'footer-logo-clear-btn');
         this.setupImageUpload('screenshot-1-upload','screenshot_1_input','screenshot-1-preview','screenshot_1');
         this.setupImageUpload('screenshot-2-upload','screenshot_2_input','screenshot-2-preview','screenshot_2');
         this.setupImageUpload('screenshot-3-upload','screenshot_3_input','screenshot-3-preview','screenshot_3');
@@ -714,11 +952,20 @@ class DroidPageApp {
         });
     }
 
-    setupImageUpload(containerId, inputId, previewId, fieldName) {
+    setupImageUpload(containerId, inputId, previewId, fieldName, clearButtonId = null) {
         const container = document.getElementById(containerId);
         const input     = document.getElementById(inputId);
+        const clearButton = clearButtonId ? document.getElementById(clearButtonId) : null;
 
         container.addEventListener('click', () => input.click());
+
+        clearButton?.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            input.value = '';
+            FormManager.updateField(fieldName, '');
+            this.clearPreview(previewId);
+        });
 
         input.addEventListener('change', async (e) => {
             const file = e.target.files[0];

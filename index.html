@@ -291,6 +291,15 @@
                         <div class="image-upload" id="header-logo-upload">
                             <input type="file" id="header_logo_input" accept="image/*" hidden>
                             <img id="header-logo-preview" class="image-preview hidden">
+                            <button type="button" class="image-clear-btn hidden" id="header-logo-clear-btn" aria-label="Clear header logo" title="Clear header logo">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M9 3h6"></path>
+                                    <path d="M4 7h16"></path>
+                                    <path d="M6 7l1 13h10l1-13"></path>
+                                    <path d="M10 11v5"></path>
+                                    <path d="M14 11v5"></path>
+                                </svg>
+                            </button>
                             <div class="upload-placeholder">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -353,42 +362,64 @@
 
                     <div class="subsection-title">Footer</div>
                     <div class="form-group">
+                        <label>Footer Logo</label>
+                        <div class="image-upload" id="footer-logo-upload">
+                            <input type="file" id="footer_logo_input" accept="image/*" hidden>
+                            <img id="footer-logo-preview" class="image-preview hidden">
+                            <button type="button" class="image-clear-btn hidden" id="footer-logo-clear-btn" aria-label="Clear footer logo" title="Clear footer logo">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M9 3h6"></path>
+                                    <path d="M4 7h16"></path>
+                                    <path d="M6 7l1 13h10l1-13"></path>
+                                    <path d="M10 11v5"></path>
+                                    <path d="M14 11v5"></path>
+                                </svg>
+                            </button>
+                            <div class="upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <span>Upload Footer Logo</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="footer_logo_size">Footer Logo Size</label>
+                        <div class="range-input-row">
+                            <input type="range" id="footer_logo_size" name="footer_logo_size" min="24" max="96" step="1" value="40">
+                            <input type="number" id="footer_logo_size_number" min="24" max="96" step="1" value="40">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="footer_brand_title">Footer Brand Title</label>
-                        <input type="text" id="footer_brand_title" name="footer_brand_title" placeholder="Defaults to App Name">
+                        <div class="field-with-toggle">
+                            <span class="inline-check">
+                                <input type="checkbox" id="show_footer_brand_title" name="show_footer_brand_title" checked>
+                            </span>
+                            <input type="text" id="footer_brand_title" name="footer_brand_title" placeholder="Defaults to App Name">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="footer_brand_subtitle">Footer Brand Subtitle</label>
-                        <textarea id="footer_brand_subtitle" name="footer_brand_subtitle" rows="2" placeholder="Defaults to Tagline"></textarea>
+                        <div class="field-with-toggle field-with-toggle-area">
+                            <span class="inline-check">
+                                <input type="checkbox" id="show_footer_brand_subtitle" name="show_footer_brand_subtitle" checked>
+                            </span>
+                            <textarea id="footer_brand_subtitle" name="footer_brand_subtitle" rows="2" placeholder="Defaults to Tagline"></textarea>
+                        </div>
                     </div>
-                    <div class="link-grid">
-                        <div class="form-group">
-                            <label for="footer_link_1_label">Footer Link 1 Label</label>
-                            <input type="text" id="footer_link_1_label" name="footer_link_1_label">
-                        </div>
-                        <div class="form-group">
-                            <label for="footer_link_1_url">Footer Link 1 URL</label>
-                            <input type="text" id="footer_link_1_url" name="footer_link_1_url">
-                        </div>
-                        <div class="form-group">
-                            <label for="footer_link_2_label">Footer Link 2 Label</label>
-                            <input type="text" id="footer_link_2_label" name="footer_link_2_label">
-                        </div>
-                        <div class="form-group">
-                            <label for="footer_link_2_url">Footer Link 2 URL</label>
-                            <input type="text" id="footer_link_2_url" name="footer_link_2_url">
-                        </div>
-                        <div class="form-group">
-                            <label for="footer_link_3_label">Footer Link 3 Label</label>
-                            <input type="text" id="footer_link_3_label" name="footer_link_3_label">
-                        </div>
-                        <div class="form-group">
-                            <label for="footer_link_3_url">Footer Link 3 URL</label>
-                            <input type="text" id="footer_link_3_url" name="footer_link_3_url">
-                        </div>
+                    <div class="section-copy">
+                        Click a footer link card to open it, drag to reorder links, and add as many footer items as you need.
+                    </div>
+                    <div id="footer-nav-items-editor" class="nav-items-editor"></div>
+                    <div class="section-actions nav-editor-actions">
+                        <button type="button" id="add-footer-nav-item-btn" class="btn btn-secondary section-action-btn">Add Footer Item</button>
                     </div>
                     <div class="form-group">
-                        <label for="footer_bottom_text">Footer Bottom Text</label>
-                        <input type="text" id="footer_bottom_text" name="footer_bottom_text" placeholder="Defaults to © 2025 App Name. Powered by DroidPage.">
+                        <label for="footer_bottom_text">Copyright Text</label>
+                        <input type="text" id="footer_bottom_text" name="footer_bottom_text" placeholder="Defaults to © current-year App Name.">
                     </div>
                 </div>
             </section>

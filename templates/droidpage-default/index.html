@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="public/styles/theme.css">
 
     <!-- Renderer-injected theme vars — read by theme.js, formatter-safe -->
-    <script type="application/json" id="theme-vars">{"--font-choice":"{{font_family}}","--primary-color":"{{primary_color}}","--bg-color":"{{bg_color}}","--text-primary":"{{text_primary}}","--text-secondary":"{{text_secondary}}","--card-bg":"{{card_bg}}","--border-color":"{{border_color}}","--header-bg":"{{header_bg}}","--footer-bg":"{{footer_bg}}","--container-max-width":"{{max_width}}px","--header-logo-size":"{{header_logo_size}}px"}</script>
+    <script type="application/json" id="theme-vars">{"--font-choice":"{{font_family}}","--primary-color":"{{primary_color}}","--bg-color":"{{bg_color}}","--text-primary":"{{text_primary}}","--text-secondary":"{{text_secondary}}","--card-bg":"{{card_bg}}","--border-color":"{{border_color}}","--header-bg":"{{header_bg}}","--footer-bg":"{{footer_bg}}","--container-max-width":"{{max_width}}px","--header-logo-size":"{{header_logo_size}}px","--footer-logo-size":"{{footer_logo_size}}px"}</script>
 </head>
 
 <body>
@@ -183,16 +183,19 @@
     ══════════════════════════════════════════════════════ -->
     <footer class="site-footer">
         <div class="container">
-            <div class="footer-inner">
-                <div>
-                    <a href="#" class="footer-brand" id="footer-brand-title">{{footer_brand_title}}</a>
-                    <p class="footer-tagline" id="footer-brand-subtitle">{{footer_brand_subtitle}}</p>
+            <div class="footer-inner {{footer_inner_class}}" id="footer-inner">
+                <div class="{{footer_brand_block_class}}" id="footer-brand-block">
+                    <div class="footer-brand-wrap" id="footer-brand">
+                        {{footer_logo_markup}}
+                        <div class="footer-brand-copy">
+                            <a href="#" class="footer-brand {{footer_brand_title_class}}" id="footer-brand-title">{{footer_brand_title}}</a>
+                            <p class="footer-tagline {{footer_brand_subtitle_class}}" id="footer-brand-subtitle">{{footer_brand_subtitle}}</p>
+                        </div>
+                    </div>
                 </div>
-                <nav>
-                    <ul class="footer-links">
-                        <li><a href="{{footer_link_1_url}}" target="_blank" rel="noopener" id="footer-link-1">{{footer_link_1_label}}</a></li>
-                        <li><a href="{{footer_link_2_url}}" id="footer-link-2">{{footer_link_2_label}}</a></li>
-                        <li><a href="{{footer_link_3_url}}" id="footer-link-3">{{footer_link_3_label}}</a></li>
+                <nav class="{{footer_nav_class}}" id="footer-nav">
+                    <ul class="footer-links" id="footer-nav-list">
+                        {{footer_nav_items_markup}}
                     </ul>
                 </nav>
             </div>

@@ -802,6 +802,41 @@ input[type="color"] {
     cursor: pointer;
     transition: var(--transition);
     overflow: hidden;
+    position: relative;
+}
+
+.image-clear-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--danger-color) 30%, var(--border-color));
+    background: color-mix(in srgb, var(--panel-bg) 88%, transparent);
+    color: var(--danger-color);
+    z-index: 2;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.image-clear-btn:hover {
+    background: color-mix(in srgb, var(--danger-color) 12%, var(--panel-bg));
+    border-color: color-mix(in srgb, var(--danger-color) 55%, var(--border-color));
+    transform: translateY(-1px);
+}
+
+.image-clear-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .image-upload:hover {
