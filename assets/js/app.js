@@ -902,9 +902,11 @@ class DroidPageApp {
             if (width < 30) {
                 builderContainer.style.gridTemplateColumns = `0px 1fr`;
                 sidebarToggle.classList.add('collapsed');
+                sidebar.classList.add('is-collapsed');
             } else {
                 builderContainer.style.gridTemplateColumns = `${width}px 1fr`;
                 sidebarToggle.classList.remove('collapsed');
+                sidebar.classList.remove('is-collapsed');
                 lastWidth = width;
                 localStorage.setItem('droidpage_sidebar_width', width);
             }

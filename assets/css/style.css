@@ -219,7 +219,6 @@ body {
 .sidebar {
     background-color: var(--sidebar-bg);
     backdrop-filter: var(--glass-blur);
-    border-right: 1px solid var(--border-color);
     padding: 10px;
     overflow-y: auto;
     overflow-x: visible;
@@ -229,6 +228,12 @@ body {
     z-index: 5;
     min-width: 0;
     transition: var(--transition), width 0.3s ease, padding 0.3s ease;
+}
+
+.sidebar.is-collapsed {
+    padding: 0;
+    border-right-color: transparent;
+    overflow: hidden;
 }
 
 .sidebar-pre-init .builder-container,
