@@ -183,6 +183,16 @@ export const Preview = {
             if (el) el.setAttribute('href', href || '#');
         };
 
+        const setSrc = (id, src) => {
+            const el = doc.getElementById(id);
+            if (el) el.setAttribute('src', src || '');
+        };
+
+        const setMetaContent = (selector, value) => {
+            const el = doc.querySelector(selector);
+            if (el) el.setAttribute('content', value || '');
+        };
+
         let headerNavItems = [];
         let footerNavItems = [];
         try {
@@ -195,6 +205,18 @@ export const Preview = {
         } catch (error) {
             console.error('Error parsing footer nav items for preview:', error);
         }
+
+        if (doc.title !== undefined) {
+            doc.title = data.meta_title || '';
+        }
+        setMetaContent('meta[name="description"]', data.meta_description || '');
+        setText('hero-app-name', appName);
+        setText('hero-tagline', tagline);
+        setText('about-description', data.description || '');
+        setHref('hero-play-store-link', data.play_store_link || '#');
+        setSrc('preview-screenshot-1', data.screenshot_1 || '');
+        setSrc('preview-screenshot-2', data.screenshot_2 || '');
+        setSrc('preview-screenshot-3', data.screenshot_3 || '');
 
         setText('header-brand-title', data.header_logo_title || appName);
         setText('header-brand-subtitle', data.header_logo_subtitle || tagline);
@@ -246,8 +268,14 @@ export const Preview = {
 
         const siteHeader = doc.getElementById('site-header');
         if (siteHeader) {
+            siteHeader.classList.toggle('is-hidden', data.show_header === 'false');
             siteHeader.classList.toggle('is-static', data.sticky_header === 'false');
             siteHeader.classList.toggle('is-sticky', data.sticky_header !== 'false');
+        }
+
+        const siteFooter = doc.querySelector('.site-footer');
+        if (siteFooter) {
+            siteFooter.classList.toggle('is-hidden', data.show_footer === 'false');
         }
 
         const headerBrand = doc.getElementById('header-brand');

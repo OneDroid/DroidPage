@@ -29,7 +29,7 @@
     <!-- ══════════════════════════════════════════════════════
          HEADER — full-width bg, inner content max-width
     ══════════════════════════════════════════════════════ -->
-    <header class="site-header {{header_sticky_class}}" id="site-header">
+    <header class="site-header {{header_sticky_class}} {{header_visibility_class}}" id="site-header">
         <div class="container">
             <a href="#" class="header-brand" id="header-brand">
                 {{header_logo_markup}}
@@ -57,10 +57,10 @@
         <section class="hero">
             <div class="container">
                 <div class="hero-badge">Now Available on Google Play</div>
-                <h1>{{app_name}}</h1>
-                <p class="hero-tagline">{{tagline}}</p>
+                <h1 id="hero-app-name">{{app_name}}</h1>
+                <p class="hero-tagline" id="hero-tagline">{{tagline}}</p>
                 <div class="hero-actions">
-                    <a href="{{play_store_link}}" class="btn btn-primary" target="_blank" rel="noopener">
+                    <a href="{{play_store_link}}" class="btn btn-primary" target="_blank" rel="noopener" id="hero-play-store-link">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
@@ -80,7 +80,7 @@
                 <div class="about-grid">
                     <div>
                         <h2>Built for the modern thinker.</h2>
-                        <p>{{description}}</p>
+                        <p id="about-description">{{description}}</p>
                     </div>
                     <aside class="spec-card">
                         <div class="spec-version">Version 1.0.0</div>
@@ -101,13 +101,13 @@
                 <div class="screenshot-carousel-wrapper">
                     <div class="screenshot-carousel" id="screenshot-carousel">
                         <div class="screenshot-item">
-                            <img src="{{screenshot_1}}" alt="App Screenshot 1" loading="lazy">
+                            <img src="{{screenshot_1}}" alt="App Screenshot 1" loading="lazy" id="preview-screenshot-1">
                         </div>
                         <div class="screenshot-item">
-                            <img src="{{screenshot_2}}" alt="App Screenshot 2" loading="lazy">
+                            <img src="{{screenshot_2}}" alt="App Screenshot 2" loading="lazy" id="preview-screenshot-2">
                         </div>
                         <div class="screenshot-item">
-                            <img src="{{screenshot_3}}" alt="App Screenshot 3" loading="lazy">
+                            <img src="{{screenshot_3}}" alt="App Screenshot 3" loading="lazy" id="preview-screenshot-3">
                         </div>
                     </div>
 
@@ -176,7 +176,7 @@
     <!-- ══════════════════════════════════════════════════════
          FOOTER — full-width bg, inner content max-width
     ══════════════════════════════════════════════════════ -->
-    <footer class="site-footer">
+    <footer class="site-footer {{footer_visibility_class}}">
         <div class="container">
             <div class="footer-inner {{footer_inner_class}}" id="footer-inner">
                 <div class="{{footer_brand_block_class}}" id="footer-brand-block">

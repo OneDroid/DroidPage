@@ -28,6 +28,14 @@ const LIVE_THEME_FIELDS = new Set([
 ]);
 
 const LIVE_CONTENT_FIELDS = new Set([
+    'app_name',
+    'tagline',
+    'description',
+    'play_store_link',
+    'screenshot_1',
+    'screenshot_2',
+    'screenshot_3',
+    'show_header',
     'sticky_header',
     'header_logo',
     'header_logo_title',
@@ -44,6 +52,7 @@ const LIVE_CONTENT_FIELDS = new Set([
     'header_nav_link_3_url',
     'header_nav_cta_label',
     'header_nav_cta_url',
+    'show_footer',
     'footer_logo',
     'show_footer_brand_title',
     'show_footer_brand_subtitle',

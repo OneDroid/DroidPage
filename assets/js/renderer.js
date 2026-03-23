@@ -89,6 +89,8 @@ export const Renderer = {
             footer_nav_items_markup: this.buildFooterNavMarkup(footerNavItems),
             footer_brand_title: data.show_footer_brand_title === 'false' ? '' : (data.footer_brand_title || data.app_name),
             footer_brand_subtitle: data.show_footer_brand_subtitle === 'false' ? '' : (data.footer_brand_subtitle || data.tagline),
+            header_visibility_class: data.show_header === 'false' ? 'is-hidden' : '',
+            footer_visibility_class: data.show_footer === 'false' ? 'is-hidden' : '',
             footer_brand_block_class: hasFooterBrand ? '' : 'is-hidden',
             footer_nav_class: hasFooterNav ? '' : 'is-hidden',
             footer_inner_class: !hasFooterBrand && !hasFooterNav
