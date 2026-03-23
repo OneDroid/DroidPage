@@ -72,6 +72,7 @@ class DroidPageApp {
     constructor() {
         this.collapsedNavItems = new Set();
         this.collapsedFooterNavItems = new Set();
+        this.colorPickerSuggestions = ['#0F172A', '#1D4ED8', '#2563EB', '#7C3AED', '#DB2777', '#EA580C', '#CA8A04', '#16A34A', '#0891B2', '#64748B', '#F8FAFC', '#111827'];
         document.body.classList.add('sidebar-pre-init');
         this.init();
     }
@@ -178,29 +179,160 @@ class DroidPageApp {
             item.className = 'color-var-item';
             item.innerHTML = `
                 <label for="cv_${varDef.key}" title="${varDef.description || ''}">${varDef.label}</label>
-                <div class="color-var-swatch" id="cv_swatch_${varDef.key}">
+                <div class="color-var-swatch" id="cv_swatch_${varDef.key}" data-cv-key="${varDef.key}" tabindex="0" role="button" aria-expanded="false">
                     <div class="color-swatch-preview" id="cv_preview_${varDef.key}" style="background:${currentVal}"></div>
                     <span class="color-swatch-hex" id="cv_hex_${varDef.key}">${currentVal}</span>
-                    <input
-                        type="color"
-                        id="cv_${varDef.key}"
-                        name="${varDef.key}"
-                        value="${currentVal}"
-                        data-cv-key="${varDef.key}"
-                    >
+                    <input type="hidden" id="cv_${varDef.key}" name="${varDef.key}" value="${currentVal}" data-cv-key="${varDef.key}">
+                    <div class="color-picker-popover" id="cv_popover_${varDef.key}" aria-hidden="true">
+                        <div class="color-picker-popover-label">Color Picker</div>
+                        <input type="text" id="cv_text_${varDef.key}" value="${currentVal}" spellcheck="false" autocomplete="off" placeholder="#3B82F6">
+                        <div class="color-picker-suggestions">
+                            ${this.colorPickerSuggestions.map((color) => `<button type="button" class="color-picker-chip" data-color="${color}" style="background:${color}" aria-label="Select ${color}"></button>`).join('')}
+                        </div>
+                        <div class="color-picker-note">Click a swatch or paste a hex color.</div>
+                    </div>
                 </div>
             `;
 
             grid.appendChild(item);
 
             // Wire up: update swatch UI + save to FormManager → triggers refreshPreview
-            const input = item.querySelector('input[type="color"]');
-            input.addEventListener('input', (e) => {
-                const val = e.target.value;
-                document.getElementById(`cv_preview_${varDef.key}`).style.background = val;
-                document.getElementById(`cv_hex_${varDef.key}`).textContent = val;
-                FormManager.updateField(varDef.key, val);
+            const swatch = item.querySelector('.color-var-swatch');
+            const textInput = item.querySelector(`#cv_text_${varDef.key}`);
+            const chips = item.querySelectorAll('.color-picker-chip');
+
+            swatch.addEventListener('click', (e) => {
+                if (e.target.closest('.color-picker-popover')) return;
+                e.preventDefault();
+                this.toggleColorPopover(varDef.key);
             });
+
+            swatch.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.toggleColorPopover(varDef.key);
+                }
+                if (e.key === 'Escape') {
+                    this.closeColorPopovers();
+                }
+            });
+
+            textInput.addEventListener('click', (e) => e.stopPropagation());
+            textInput.addEventListener('input', (e) => {
+                const normalized = this.normalizeHexColor(e.target.value);
+                if (normalized) this.updateThemeColor(varDef.key, normalized);
+            });
+            textInput.addEventListener('paste', (e) => {
+                const pasted = e.clipboardData?.getData('text') || '';
+                const normalized = this.normalizeHexColor(pasted);
+                if (!normalized) return;
+                e.preventDefault();
+                this.updateThemeColor(varDef.key, normalized);
+            });
+
+            chips.forEach((chip) => {
+                chip.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.updateThemeColor(varDef.key, chip.dataset.color);
+                });
+            });
+        });
+    }
+
+    syncColorVarUI(key, value) {
+        const preview = document.getElementById(`cv_preview_${key}`);
+        const hex = document.getElementById(`cv_hex_${key}`);
+        const input = document.getElementById(`cv_${key}`);
+        const textInput = document.getElementById(`cv_text_${key}`);
+
+        if (preview) preview.style.background = value;
+        if (hex) hex.textContent = value;
+        if (input) input.value = value;
+        if (textInput) textInput.value = value;
+    }
+
+    normalizeHexColor(value) {
+        const trimmed = String(value || '').trim();
+        if (!trimmed) return null;
+        const raw = trimmed.startsWith('#') ? trimmed.slice(1) : trimmed;
+        if (!/^[0-9a-fA-F]{3}([0-9a-fA-F]{3})?$/.test(raw)) return null;
+        if (raw.length === 3) {
+            return `#${raw.split('').map((char) => char + char).join('').toUpperCase()}`;
+        }
+        return `#${raw.toUpperCase()}`;
+    }
+
+    updateThemeColor(key, value) {
+        const normalized = this.normalizeHexColor(value);
+        if (!normalized) return;
+        this.syncColorVarUI(key, normalized);
+        FormManager.updateField(key, normalized);
+    }
+
+    toggleColorPopover(key) {
+        const swatch = document.getElementById(`cv_swatch_${key}`);
+        const popover = document.getElementById(`cv_popover_${key}`);
+        if (!swatch) return;
+
+        const isOpen = swatch.classList.contains('is-open');
+        this.closeColorPopovers();
+        if (isOpen) return;
+
+        swatch.classList.add('is-open');
+        swatch.setAttribute('aria-expanded', 'true');
+        popover?.setAttribute('aria-hidden', 'false');
+        this.positionColorPopover(key);
+        const textInput = document.getElementById(`cv_text_${key}`);
+        textInput?.focus();
+        textInput?.select();
+    }
+
+    positionColorPopover(key) {
+        const swatch = document.getElementById(`cv_swatch_${key}`);
+        const popover = document.getElementById(`cv_popover_${key}`);
+        const sidebar = document.getElementById('sidebar');
+        if (!swatch || !popover || !sidebar) return;
+
+        const swatchRect = swatch.getBoundingClientRect();
+        const sidebarRect = sidebar.getBoundingClientRect();
+        const viewportPadding = 12;
+        const preferredWidth = 260;
+
+        popover.style.position = 'fixed';
+        popover.style.left = '0px';
+        popover.style.top = '0px';
+        popover.style.right = 'auto';
+        popover.style.width = `${preferredWidth}px`;
+
+        const popoverRect = popover.getBoundingClientRect();
+        let left = sidebarRect.left + ((sidebarRect.width - popoverRect.width) / 2);
+        if (left < viewportPadding) left = viewportPadding;
+        if (left + popoverRect.width > window.innerWidth - viewportPadding) {
+            left = window.innerWidth - viewportPadding - popoverRect.width;
+        }
+
+        let top = swatchRect.bottom + 10;
+        if (top + popoverRect.height > window.innerHeight - viewportPadding) {
+            top = swatchRect.top - popoverRect.height - 10;
+        }
+        if (top < viewportPadding) top = viewportPadding;
+
+        popover.style.left = `${Math.round(left)}px`;
+        popover.style.top = `${Math.round(top)}px`;
+    }
+
+    closeColorPopovers() {
+        document.querySelectorAll('.color-var-swatch.is-open').forEach((swatch) => {
+            swatch.classList.remove('is-open');
+            swatch.setAttribute('aria-expanded', 'false');
+        });
+        document.querySelectorAll('.color-picker-popover').forEach((popover) => {
+            popover.setAttribute('aria-hidden', 'true');
+            popover.style.left = '';
+            popover.style.top = '';
+            popover.style.right = '';
+            popover.style.width = '';
         });
     }
 
@@ -664,9 +796,11 @@ class DroidPageApp {
             const cvPreview = document.getElementById(`cv_preview_${key}`);
             const cvHex     = document.getElementById(`cv_hex_${key}`);
             const cvInput   = document.getElementById(`cv_${key}`);
+            const cvText    = document.getElementById(`cv_text_${key}`);
             if (cvPreview && data[key]) cvPreview.style.background = data[key];
             if (cvHex     && data[key]) cvHex.textContent = data[key];
             if (cvInput   && data[key]) cvInput.value = data[key];
+            if (cvText    && data[key]) cvText.value = data[key];
         });
 
         const colorHex = document.getElementById('color-hex');
@@ -852,9 +986,11 @@ class DroidPageApp {
                 const cvPreview = document.getElementById(`cv_preview_primary_color`);
                 const cvHex     = document.getElementById(`cv_hex_primary_color`);
                 const cvInput   = document.getElementById(`cv_primary_color`);
+                const cvText    = document.getElementById(`cv_text_primary_color`);
                 if (cvPreview) cvPreview.style.background = value;
                 if (cvHex)     cvHex.textContent = value;
                 if (cvInput)   cvInput.value = value;
+                if (cvText)    cvText.value = value;
             }
 
             if (name === 'header_logo_size' || name === 'footer_logo_size') {
@@ -872,6 +1008,24 @@ class DroidPageApp {
         if (fontFamilySelect) {
             fontFamilySelect.addEventListener('change', handleFieldChange);
         }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.color-var-swatch')) {
+                this.closeColorPopovers();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                this.closeColorPopovers();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.color-var-swatch.is-open').forEach((swatch) => {
+                this.positionColorPopover(swatch.dataset.cvKey);
+            });
+        });
 
         if (headerFooterControls) {
             headerFooterControls.addEventListener('input', handleFieldChange);

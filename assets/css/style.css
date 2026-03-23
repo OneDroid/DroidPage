@@ -226,6 +226,7 @@ body {
     /* Added to keep toggle button visible */
     height: calc(100vh - 70px);
     position: relative;
+    z-index: 5;
     min-width: 0;
     transition: var(--transition), width 0.3s ease, padding 0.3s ease;
 }
@@ -893,6 +894,7 @@ input[type="color"] {
     display: flex;
     flex-direction: column;
     position: relative;
+    z-index: 1;
     overflow: hidden;
     transition: var(--transition);
     /* Prevent child overflow from affecting layout */
@@ -1056,10 +1058,19 @@ input[type="color"] {
 /* ── Theme Color Customization Section ──────────────────────── */
 .theme-colors-section {
     display: none; /* shown dynamically when a theme has colorVars */
+    overflow: visible !important;
 }
 
 .theme-colors-section.visible {
     display: block;
+}
+
+.theme-colors-section .section-body {
+    overflow: visible;
+}
+
+.theme-colors-section.collapsed .section-body {
+    overflow: hidden;
 }
 
 .color-vars-grid {
@@ -1072,6 +1083,7 @@ input[type="color"] {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    position: relative;
 }
 
 .color-var-item label {
@@ -1100,16 +1112,9 @@ input[type="color"] {
     border-color: var(--primary-color);
 }
 
-.color-var-swatch input[type="color"] {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
-    border: none;
-    padding: 0;
-    margin: 0;
+.color-var-swatch.is-open {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 16%, transparent);
 }
 
 .color-swatch-preview {
@@ -1133,6 +1138,79 @@ input[type="color"] {
     grid-column: 1 / -1;
 }
 
+.color-picker-popover {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+    width: 260px;
+    min-width: 260px;
+    max-width: calc(100vw - 24px);
+    padding: 12px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+}
+
+.color-var-swatch.is-open .color-picker-popover {
+    display: flex;
+}
+
+.color-picker-popover-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.color-picker-popover input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: var(--input-bg);
+    color: var(--text-primary);
+    font: inherit;
+    font-family: 'JetBrains Mono', 'Monaco', monospace;
+    text-transform: uppercase;
+}
+
+.color-picker-popover input[type="text"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 14%, transparent);
+}
+
+.color-picker-suggestions {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.color-picker-chip {
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.color-picker-chip:hover {
+    transform: translateY(-1px);
+    border-color: var(--text-primary);
+}
+
+.color-picker-note {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+}
+
 @media (max-width: 1200px) {
     .color-vars-grid {
         grid-template-columns: 1fr;
@@ -1142,4 +1220,5 @@ input[type="color"] {
     .toggle-row {
         grid-template-columns: 1fr;
     }
+
 }
