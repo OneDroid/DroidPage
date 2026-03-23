@@ -64,8 +64,8 @@ body {
 }
 
 .header-brand-logo {
-    width: var(--header-logo-size, 46px);
-    height: var(--header-logo-size, 46px);
+    width: var(--header-logo-size, 60px);
+    height: var(--header-logo-size, 60px);
     border-radius: 14px;
     object-fit: cover;
     flex-shrink: 0;
@@ -75,12 +75,11 @@ body {
 .header-brand-copy {
     display: inline-flex;
     flex-direction: column;
-    gap: 4px;
     min-width: 0;
 }
 
 .header-brand-title {
-    font-size: 1.1rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: #fff;
     text-decoration: none;
@@ -93,6 +92,8 @@ body {
     color: rgba(255, 255, 255, 0.42);
     max-width: 260px;
     line-height: 1.5;
+    letter-spacing: 1px;
+    opacity: 0.9;
 }
 
 .header-brand:hover { opacity: 0.85; }

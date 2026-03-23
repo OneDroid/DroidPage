@@ -338,7 +338,13 @@ export const Preview = {
                 headerLogo.src = data.header_logo;
                 headerLogo.alt = `${data.header_logo_title || appName} logo`;
             } else if (headerLogo) {
-                headerLogo.remove();
+                const defaultSrc = headerLogo.getAttribute('data-default-src');
+                if (defaultSrc) {
+                    headerLogo.src = defaultSrc;
+                    headerLogo.alt = `${data.header_logo_title || appName} logo`;
+                } else {
+                    headerLogo.remove();
+                }
             }
         }
     }

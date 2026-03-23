@@ -3,7 +3,7 @@
     "id": "droidpage-default",
     "name": "DroidPage Default",
     "description": "The official DroidPage default theme.",
-    "thumbnail": "templates/droidpage-default/public/media/previews/notes_list.png",
+    "thumbnail": "templates/droidpage-default/public/media/screenshots/notes_list.png",
     "path": "templates/droidpage-default/",
     "features": ["maxWidth"],
     "colorVars": [
@@ -61,7 +61,7 @@
     "id": "droidpage-glass",
     "name": "DroidPage Glass",
     "description": "Glassmorphism-inspired theme placeholder.",
-    "thumbnail": "templates/droidpage-glass/public/media/previews/coming-soon.svg",
+    "thumbnail": "templates/droidpage-glass/public/media/screenshots/coming-soon.svg",
     "path": "templates/droidpage-glass/",
     "features": ["maxWidth"],
     "colorVars": [
