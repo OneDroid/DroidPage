@@ -212,8 +212,12 @@ export const Preview = {
         setMetaContent('meta[name="description"]', data.meta_description || '');
         setText('hero-app-name', appName);
         setText('hero-tagline', tagline);
+        setText('intro-app-name', data.header_logo_title || appName);
         setText('about-description', data.description || '');
         setHref('hero-play-store-link', data.play_store_link || '#');
+        setHref('meta-link-source', data.play_store_link || '#');
+        setHref('meta-link-visit', data.play_store_link || '#');
+        setHref('meta-link-download', data.play_store_link || '#');
         setSrc('preview-screenshot-1', data.screenshot_1 || '');
         setSrc('preview-screenshot-2', data.screenshot_2 || '');
         setSrc('preview-screenshot-3', data.screenshot_3 || '');
