@@ -56,5 +56,63 @@
         "description": "Footer section"
       }
     ]
+  },
+  {
+    "id": "droidpage-glass",
+    "name": "DroidPage Glass",
+    "description": "Glassmorphism-inspired theme placeholder.",
+    "thumbnail": "templates/droidpage-glass/public/media/previews/coming-soon.svg",
+    "path": "templates/droidpage-glass/",
+    "features": ["maxWidth"],
+    "colorVars": [
+      {
+        "key": "primary_color",
+        "label": "Primary / Accent",
+        "default": "#7c3aed",
+        "description": "Accent highlights and call-to-action color"
+      },
+      {
+        "key": "bg_color",
+        "label": "Page Background",
+        "default": "#09111f",
+        "description": "Overall page backdrop"
+      },
+      {
+        "key": "text_primary",
+        "label": "Primary Text",
+        "default": "#f8fafc",
+        "description": "Main heading and body text"
+      },
+      {
+        "key": "text_secondary",
+        "label": "Secondary Text",
+        "default": "#bfd2ff",
+        "description": "Muted supporting copy"
+      },
+      {
+        "key": "card_bg",
+        "label": "Glass Surface",
+        "default": "#cbd5e1",
+        "description": "Card and panel glass tint"
+      },
+      {
+        "key": "border_color",
+        "label": "Glass Border",
+        "default": "#e2e8f0",
+        "description": "Soft glass outline color"
+      },
+      {
+        "key": "header_bg",
+        "label": "Header Background",
+        "default": "#111827",
+        "description": "Top bar fallback tint"
+      },
+      {
+        "key": "footer_bg",
+        "label": "Footer Background",
+        "default": "#0f172a",
+        "description": "Footer fallback tint"
+      }
+    ]
   }
 ]
