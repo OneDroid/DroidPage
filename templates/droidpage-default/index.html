@@ -4,228 +4,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Jotter - A modern, open-source offline-first note-taking app.">
-    <title>Jotter | Open Apps Labs</title>
+    <meta name="description" content="{{meta_description}}">
+    <title>{{meta_title}}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="../../assets/css/global.css">
-    <link rel="icon" type="image/svg+xml" href="../../assets/icons/code-xml.svg">
+    <link rel="stylesheet" href="public/styles/theme.css">
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Roboto+Mono:wght@400;500;700&display=swap"
-        rel="stylesheet">
-    <script src="../../assets/js/components.js" defer></script>
-
-    <style>
-        .jotter-specs {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-        }
-
-        .privacy-link-wrapper {
-            margin-bottom: 60px;
-            text-align: center;
-        }
-
-        .privacy-link {
-            font-family: var(--font-mono);
-            color: var(--text-secondary);
-            font-size: .85rem;
-            text-decoration: underline;
-            transition: color .2s;
-        }
-
-        .privacy-link:hover {
-            color: var(--text-primary);
-        }
-
-        @media(max-width: 768px) {
-            .jotter-specs {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 2.8rem;
-            }
-        }
-
-        /* Screenshots Section */
-        .screenshots-section {
-            margin-bottom: 100px;
-            position: relative;
-        }
-
-        .screenshot-carousel-wrapper {
-            position: relative;
-            padding: 0 40px;
-            /* Space for arrows */
-        }
-
-        .screenshot-carousel {
-            display: flex;
-            overflow-x: auto;
-            gap: 20px;
-            padding: 20px 0 40px;
-            scroll-snap-type: x mandatory;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            scroll-behavior: smooth;
-        }
-
-        .screenshot-carousel::-webkit-scrollbar {
-            display: none;
-        }
-
-        .screenshot-item {
-            flex: 0 0 280px;
-            aspect-ratio: 9 / 19;
-            scroll-snap-align: start;
-            border-radius: 32px;
-            overflow: hidden;
-            border: 4px solid var(--border-color);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            background: #000;
-            position: relative;
-        }
-
-        .screenshot-item:hover {
-            transform: translateY(-12px) scale(1.02);
-            border-color: var(--text-primary);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-        }
-
-        .screenshot-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        /* Mobile Adjustments */
-        @media(max-width: 768px) {
-            .screenshot-carousel-wrapper {
-                padding: 0;
-            }
-
-            .screenshot-item {
-                flex: 0 0 220px;
-            }
-
-            .screenshot-nav {
-                display: none;
-            }
-        }
-
-        /* Navigation Arrows */
-        .screenshot-nav {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            transform: translateY(-50%);
-            display: flex;
-            justify-content: space-between;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .nav-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            pointer-events: auto;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-btn:hover {
-            background: var(--text-primary);
-            color: var(--bg-color);
-            transform: scale(1.1);
-        }
-
-        .nav-btn svg {
-            width: 24px;
-            height: 24px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
-        }
-
-        /* Lightbox Modal */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            cursor: zoom-out;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .lightbox.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .lightbox-content {
-            max-width: 90%;
-            max-height: 90vh;
-            border-radius: 20px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-            transform: scale(0.9);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: default;
-        }
-
-        .lightbox.active .lightbox-content {
-            transform: scale(1);
-        }
-
-        .screenshot-item {
-            cursor: zoom-in;
-        }
-    </style>
+    <script type="application/json" id="theme-vars">{"--font-choice":"{{font_family}}","--primary-color":"{{primary_color}}","--bg-color":"{{bg_color}}","--text-primary":"{{text_primary}}","--text-secondary":"{{text_secondary}}","--card-bg":"{{card_bg}}","--border-color":"{{border_color}}","--header-bg":"{{header_bg}}","--footer-bg":"{{footer_bg}}","--container-max-width":"{{max_width}}px","--header-logo-size":"{{header_logo_size}}px","--footer-logo-size":"{{footer_logo_size}}px"}</script>
 </head>
 
 <body>
-    <site-nav root="../../"></site-nav>
+    <header class="site-header {{header_sticky_class}} {{header_visibility_class}}" id="site-header">
+        <div class="container">
+            <a href="#" class="header-brand" id="header-brand">
+                <img src="public/media/img/header-logo.png" alt="{{app_name}} logo" class="header-brand-logo" data-default-src="public/media/img/header-logo.png">
+                <span class="header-brand-copy">
+                    <span class="header-brand-title {{header_logo_title_class}}" id="header-brand-title">{{header_logo_title}}</span>
+                    <span class="header-brand-subtitle {{header_logo_subtitle_class}}" id="header-brand-subtitle">{{header_logo_subtitle}}</span>
+                </span>
+            </a>
 
-    <div class="container main-content">
-        <hero-section root="../../" page="jotter"></hero-section>
-
-        <jotter-specs root="../../"></jotter-specs>
-
-        <screenshot-carousel root="../../"></screenshot-carousel>
-
-        <feature-grid root="../../"></feature-grid>
-
-        <div class="privacy-link-wrapper">
-            <a href="./privacy" class="privacy-link">View Privacy Policy</a>
+            <nav class="site-nav">
+                <ul class="header-nav" id="header-nav-list">
+                    {{header_nav_items_markup}}
+                    {{header_nav_cta_markup}}
+                </ul>
+            </nav>
         </div>
-    </div>
+    </header>
 
-    <site-footer root="../../"></site-footer>
+    <main class="landing-shell">
+        <section class="hero" id="home">
+            <div class="container hero-layout">
+                <div class="hero-mark" aria-hidden="true">
+                    <span class="hero-mark-inner">OD</span>
+                </div>
+                <div class="hero-copy">
+                    <p class="hero-kicker">Minimal Android Landing Page</p>
+                    <h1 id="hero-app-name">{{app_name}}</h1>
+                    <p class="hero-tagline" id="hero-tagline">{{tagline}}</p>
+                    <div class="hero-actions">
+                        <a href="{{play_store_link}}" class="hero-link primary-link" target="_blank" rel="noopener" id="hero-play-store-link">Visit Play Store</a>
+                        <a href="#screenshots" class="hero-link">See Screenshots</a>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox">
+        <section class="content-section intro-section" id="features">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="section-index">(01)</span>
+                    <span class="section-heading-text">Features</span>
+                </div>
+
+                <div class="intro-grid">
+                    <article class="panel panel-copy">
+                        <p class="intro-lead"><strong id="intro-app-name">{{header_logo_title}}</strong> is built for an offline-first experience with a beautiful, dynamic UI. Backup and restore your notes easily.</p>
+                        <p class="intro-body" id="about-description">{{description}}</p>
+                        <span class="panel-note">Built for minimalists</span>
+                    </article>
+
+                    <aside class="panel panel-links">
+                        <div class="meta-list">
+                            <div class="meta-row">
+                                <span>Download</span>
+                                <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-source">Source</a>
+                            </div>
+                            <div class="meta-row">
+                                <span>Play Store</span>
+                                <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-visit">Visit</a>
+                            </div>
+                            <div class="meta-row">
+                                <span>Direct APK</span>
+                                <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-download">Download</a>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section screenshots-section" id="screenshots">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="section-index">(02)</span>
+                    <span class="section-heading-text">Screenshots</span>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="screenshot-carousel-wrapper">
+                    <div class="screenshot-carousel" id="screenshot-carousel">
+                        <div class="screenshot-item">
+                            <img src="{{screenshot_1}}" alt="App Screenshot 1" loading="lazy" id="preview-screenshot-1">
+                        </div>
+                        <div class="screenshot-item">
+                            <img src="{{screenshot_2}}" alt="App Screenshot 2" loading="lazy" id="preview-screenshot-2">
+                        </div>
+                        <div class="screenshot-item">
+                            <img src="{{screenshot_3}}" alt="App Screenshot 3" loading="lazy" id="preview-screenshot-3">
+                        </div>
+                    </div>
+
+                    <div class="screenshot-nav" aria-hidden="true">
+                        <button class="nav-btn" id="carousel-prev" aria-label="Previous screenshot">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <button class="nav-btn" id="carousel-next" aria-label="Next screenshot">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section features-section" id="about">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="section-index">(03)</span>
+                    <span class="section-heading-text">More Relevant</span>
+                </div>
+
+                <div class="feature-grid">
+                    <article class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 20h9"></path>
+                                <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"></path>
+                            </svg>
+                        </div>
+                        <h3>Rich Notes</h3>
+                        <p>Material You theming with dynamic colors, multiple view modes, and tactile mobile interactions.</p>
+                        <div class="feature-tags">
+                            <span>Material 3</span>
+                            <span>Dynamic</span>
+                        </div>
+                    </article>
+
+                    <article class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
+                                <path d="M8 11V7a4 4 0 1 1 8 0v4"></path>
+                            </svg>
+                        </div>
+                        <h3>Secure</h3>
+                        <p>Lock individual notes with a PIN or pattern. Keep personal writing organized without giving up control.</p>
+                        <div class="feature-tags">
+                            <span>Lock</span>
+                            <span>Trash</span>
+                        </div>
+                    </article>
+
+                    <article class="feature-card">
+                        <div class="feature-icon">
+                            <svg viewBox="0 0 24 24">
+                                <path d="m2 2 20 20"></path>
+                                <path d="M8.5 8.5a5 5 0 0 0 7 7"></path>
+                                <path d="M16 8a5 5 0 0 0-7-1"></path>
+                                <path d="M12 12h.01"></path>
+                            </svg>
+                        </div>
+                        <h3>Offline First</h3>
+                        <p>All data is stored locally with no tracking and no cloud requirement. Your data stays yours.</p>
+                        <div class="feature-tags">
+                            <span>Local DB</span>
+                            <span>Backup</span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="privacy-link-wrapper">
+            <div class="container">
+                <a class="privacy-link" href="./privacy">View Privacy Policy</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer {{footer_visibility_class}}">
+        <div class="container">
+            <div class="footer-inner {{footer_inner_class}}" id="footer-inner">
+                <div class="{{footer_brand_block_class}}" id="footer-brand-block">
+                    <div class="footer-brand-wrap" id="footer-brand">
+                        {{footer_logo_markup}}
+                        <div class="footer-brand-copy">
+                            <a href="#" class="footer-brand {{footer_brand_title_class}}" id="footer-brand-title">{{footer_brand_title}}</a>
+                            <p class="footer-tagline {{footer_brand_subtitle_class}}" id="footer-brand-subtitle">{{footer_brand_subtitle}}</p>
+                        </div>
+                    </div>
+                </div>
+                <nav class="{{footer_nav_class}}" id="footer-nav">
+                    <ul class="footer-links" id="footer-nav-list">
+                        {{footer_nav_items_markup}}
+                    </ul>
+                </nav>
+            </div>
+            <div class="footer-bottom" id="footer-bottom">{{footer_bottom_text}}</div>
+        </div>
+    </footer>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot preview">
         <img class="lightbox-content" id="lightboxImg" src="" alt="Enlarged Screenshot">
     </div>
 
+    <script src="public/scripts/theme.js" defer></script>
 </body>
 
 </html>

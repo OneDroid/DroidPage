@@ -1,23 +1,118 @@
 [
   {
-    "id": "theme-default",
-    "name": "Classic Blue",
-    "description": "A clean, modern blue-themed landing page.",
-    "thumbnail": "templates/droidpage-default/assets/screenshots/notes_list.png",
-    "path": "templates/theme-default/"
+    "id": "droidpage-default",
+    "name": "DroidPage Default",
+    "description": "The official DroidPage default theme.",
+    "thumbnail": "templates/droidpage-default/public/media/screenshots/notes_list.png",
+    "path": "templates/droidpage-default/",
+    "features": ["maxWidth"],
+    "colorVars": [
+      {
+        "key": "primary_color",
+        "label": "Primary / Accent",
+        "default": "#3b82f6",
+        "description": "Buttons, links, highlights"
+      },
+      {
+        "key": "bg_color",
+        "label": "Page Background",
+        "default": "#ffffff",
+        "description": "Main page background"
+      },
+      {
+        "key": "text_primary",
+        "label": "Primary Text",
+        "default": "#0f172a",
+        "description": "Headings and body text"
+      },
+      {
+        "key": "text_secondary",
+        "label": "Secondary Text",
+        "default": "#64748b",
+        "description": "Subtitles and captions"
+      },
+      {
+        "key": "card_bg",
+        "label": "Card Background",
+        "default": "#f8fafc",
+        "description": "Cards and section backgrounds"
+      },
+      {
+        "key": "border_color",
+        "label": "Border / Divider",
+        "default": "#e2e8f0",
+        "description": "Card borders, dividers"
+      },
+      {
+        "key": "header_bg",
+        "label": "Header Background",
+        "default": "#0f172a",
+        "description": "Top navigation bar"
+      },
+      {
+        "key": "footer_bg",
+        "label": "Footer Background",
+        "default": "#020617",
+        "description": "Footer section"
+      }
+    ]
   },
   {
-    "id": "theme-dark",
-    "name": "Midnight Dark",
-    "description": "Sleek dark design for a premium look.",
-    "thumbnail": "templates/droidpage-default/assets/screenshots/note_editor.png",
-    "path": "templates/theme-dark/"
-  },
-  {
-    "id": "theme-minimal",
-    "name": "Minimalist Light",
-    "description": "Clean white background with focused content.",
-    "thumbnail": "templates/droidpage-default/assets/screenshots/lock_screen.png",
-    "path": "templates/theme-minimal/"
+    "id": "droidpage-glass",
+    "name": "DroidPage Glass",
+    "description": "Glassmorphism-inspired theme placeholder.",
+    "thumbnail": "templates/droidpage-glass/public/media/screenshots/coming-soon.svg",
+    "path": "templates/droidpage-glass/",
+    "features": ["maxWidth"],
+    "colorVars": [
+      {
+        "key": "primary_color",
+        "label": "Primary / Accent",
+        "default": "#7c3aed",
+        "description": "Accent highlights and call-to-action color"
+      },
+      {
+        "key": "bg_color",
+        "label": "Page Background",
+        "default": "#09111f",
+        "description": "Overall page backdrop"
+      },
+      {
+        "key": "text_primary",
+        "label": "Primary Text",
+        "default": "#f8fafc",
+        "description": "Main heading and body text"
+      },
+      {
+        "key": "text_secondary",
+        "label": "Secondary Text",
+        "default": "#bfd2ff",
+        "description": "Muted supporting copy"
+      },
+      {
+        "key": "card_bg",
+        "label": "Glass Surface",
+        "default": "#cbd5e1",
+        "description": "Card and panel glass tint"
+      },
+      {
+        "key": "border_color",
+        "label": "Glass Border",
+        "default": "#e2e8f0",
+        "description": "Soft glass outline color"
+      },
+      {
+        "key": "header_bg",
+        "label": "Header Background",
+        "default": "#111827",
+        "description": "Top bar fallback tint"
+      },
+      {
+        "key": "footer_bg",
+        "label": "Footer Background",
+        "default": "#0f172a",
+        "description": "Footer fallback tint"
+      }
+    ]
   }
 ]

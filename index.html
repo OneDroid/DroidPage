@@ -147,51 +147,170 @@
     <main class="builder-container">
         <!-- Sidebar - Form and Theme selection -->
         <aside class="sidebar" id="sidebar">
-            <section class="theme-selection">
-                <h3>Choose a Theme</h3>
-                <div id="theme-list" class="theme-grid">
-                    <!-- Themes loaded dynamically -->
-                    <div class="theme-skeleton"></div>
-                    <div class="theme-skeleton"></div>
-                    <div class="theme-skeleton"></div>
+
+            <!-- ── 1. Select  Theme ─────────────────── -->
+            <section class="theme-selection collapsed" id="section-themes">
+                <div class="section-header" data-toggle="section-themes">
+                    <h3>Select Theme</h3>
+                    <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="section-body">
+                    <div id="theme-list" class="theme-grid">
+                        <div class="theme-skeleton"></div>
+                        <div class="theme-skeleton"></div>
+                        <div class="theme-skeleton"></div>
+                    </div>
                 </div>
             </section>
 
-            <section class="app-details">
-                <h3>App Details</h3>
-                <form id="app-form">
-                    <div class="form-group">
-                        <label for="app_name">App Name</label>
-                        <input type="text" id="app_name" name="app_name" placeholder="E.g. FitnessTracker">
+            <!-- ── 2. customize theme ── -->
+            <section class="theme-colors-section" id="section-theme-colors">
+                <div class="section-header" data-toggle="section-theme-colors">
+                    <h3>Customize Theme</h3>
+                    <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="section-body">
+                    <div class="section-copy">
+                        Tune the theme palette and typography.
+                    </div>
+                    <div class="form-group" id="max-width-group" style="display: none;">
+                        <label for="max_width">Max Width (px)</label>
+                        <input type="number" id="max_width" name="max_width" placeholder="E.g. 1200" min="600"
+                            max="2500">
                     </div>
                     <div class="form-group">
-                        <label for="tagline">Tagline</label>
-                        <input type="text" id="tagline" name="tagline"
-                            placeholder="E.g. Your personal workout companion">
+                        <label for="font_family">Font Family</label>
+                        <select id="font_family" name="font_family"></select>
                     </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea id="description" name="description" rows="3"
-                            placeholder="Tell users why your app is great..."></textarea>
+                    <div class="color-vars-grid" id="color-vars-grid">
+                        <!-- Color pickers injected by app.js -->
                     </div>
-                    <div class="form-group">
-                        <label for="primary_color">Primary Color</label>
-                        <div class="color-picker-wrapper">
-                            <input type="color" id="primary_color" name="primary_color" value="#3498db">
-                            <span id="color-hex">#3498db</span>
+                    <div class="section-actions">
+                        <button type="button" id="reset-theme-colors-btn"
+                            class="btn btn-secondary section-action-btn">Reset Theme Colors</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── 3. App Details ─────────────────────── -->
+            <section class="app-details collapsed" id="section-app-details">
+                <div class="section-header" data-toggle="section-app-details">
+                    <h3>App Details</h3>
+                    <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="section-body">
+                    <form id="app-form">
+                        <div class="form-group">
+                            <label for="app_name">App Name</label>
+                            <input type="text" id="app_name" name="app_name" placeholder="E.g. FitnessTracker">
                         </div>
+                        <div class="form-group">
+                            <label for="tagline">Tagline</label>
+                            <input type="text" id="tagline" name="tagline"
+                                placeholder="E.g. Your personal workout companion">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea id="description" name="description" rows="3"
+                                placeholder="Tell users why your app is great..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="play_store_link">Play Store Link</label>
+                            <input type="url" id="play_store_link" name="play_store_link"
+                                placeholder="https://play.google.com/store/apps/details?id=...">
+                        </div>
+                        <div class="form-group">
+                            <label>App Icon</label>
+                            <div class="image-upload" id="icon-upload">
+                                <input type="file" id="app_icon_input" accept="image/*" hidden>
+                                <img id="icon-preview" class="image-preview hidden">
+                                <div class="upload-placeholder">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="17 8 12 3 7 8" />
+                                        <line x1="12" y1="3" x2="12" y2="15" />
+                                    </svg>
+                                    <span>Click to Upload Icon</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Screenshots (Up to 3)</label>
+                            <div class="screenshots-row">
+                                <div class="image-upload-small" id="screenshot-1-upload">
+                                    <input type="file" id="screenshot_1_input" accept="image/*" hidden>
+                                    <img id="screenshot-1-preview" class="image-preview hidden">
+                                    <div class="upload-placeholder-small">1</div>
+                                </div>
+                                <div class="image-upload-small" id="screenshot-2-upload">
+                                    <input type="file" id="screenshot_2_input" accept="image/*" hidden>
+                                    <img id="screenshot-2-preview" class="image-preview hidden">
+                                    <div class="upload-placeholder-small">2</div>
+                                </div>
+                                <div class="image-upload-small" id="screenshot-3-upload">
+                                    <input type="file" id="screenshot_3_input" accept="image/*" hidden>
+                                    <img id="screenshot-3-preview" class="image-preview hidden">
+                                    <div class="upload-placeholder-small">3</div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="header-footer-settings collapsed" id="section-header-footer">
+                <div class="section-header" data-toggle="section-header-footer">
+                    <h3>Header & Footer</h3>
+                    <svg class="section-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+                <div class="section-body" id="header-footer-controls">
+                    <div class="section-copy">
+                        Edit the header layout, navbar links, and footer content.
                     </div>
-                    <div class="form-group">
-                        <label for="play_store_link">Play Store Link</label>
-                        <input type="url" id="play_store_link" name="play_store_link"
-                            placeholder="https://play.google.com/store/apps/details?id=...">
+
+                    <div class="subsection-title">Header</div>
+                    <div class="toggle-row">
+                        <label class="toggle-control" for="show_header">
+                            <input type="checkbox" id="show_header" name="show_header" checked>
+                            <span>Show Header</span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <label class="toggle-control" for="sticky_header">
+                            <input type="checkbox" id="sticky_header" name="sticky_header" checked>
+                            <span>Sticky Header</span>
+                        </label>
                     </div>
 
                     <div class="form-group">
-                        <label>App Icon</label>
-                        <div class="image-upload" id="icon-upload">
-                            <input type="file" id="app_icon_input" accept="image/*" hidden>
-                            <img id="icon-preview" class="image-preview hidden">
+                        <label>Header Logo</label>
+                        <div class="image-upload" id="header-logo-upload">
+                            <input type="file" id="header_logo_input" accept="image/*" hidden>
+                            <img id="header-logo-preview" class="image-preview hidden">
+                            <button type="button" class="image-clear-btn hidden" id="header-logo-clear-btn"
+                                aria-label="Clear header logo" title="Clear header logo">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M9 3h6"></path>
+                                    <path d="M4 7h16"></path>
+                                    <path d="M6 7l1 13h10l1-13"></path>
+                                    <path d="M10 11v5"></path>
+                                    <path d="M14 11v5"></path>
+                                </svg>
+                            </button>
                             <div class="upload-placeholder">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -200,33 +319,147 @@
                                     <polyline points="17 8 12 3 7 8" />
                                     <line x1="12" y1="3" x2="12" y2="15" />
                                 </svg>
-                                <span>Click to Upload Icon</span>
+                                <span>Upload Header Logo</span>
                             </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="header_logo_size">Logo Size</label>
+                        <div class="range-input-row">
+                            <input type="range" id="header_logo_size" name="header_logo_size" min="24" max="96" step="1"
+                                value="60">
+                            <input type="number" id="header_logo_size_number" min="24" max="96" step="1" value="60">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="header_logo_title">Header Logo Title</label>
+                        <div class="field-with-toggle">
+                            <span class="inline-check">
+                                <input type="checkbox" id="show_header_logo_title" name="show_header_logo_title"
+                                    checked>
+                            </span>
+                            <input type="text" id="header_logo_title" name="header_logo_title"
+                                placeholder="Defaults to App Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="header_logo_subtitle">Header Logo Subtitle</label>
+                        <div class="field-with-toggle">
+                            <span class="inline-check">
+                                <input type="checkbox" id="show_header_logo_subtitle" name="show_header_logo_subtitle"
+                                    checked>
+                            </span>
+                            <input type="text" id="header_logo_subtitle" name="header_logo_subtitle"
+                                placeholder="Defaults to Tagline">
                         </div>
                     </div>
 
+                    <div class="subsection-title">Navbar</div>
+                    <div class="section-copy">
+                        Click a nav card to open it, drag to reorder links, and add as many nav items as you need.
+                    </div>
+                    <div id="header-nav-items-editor" class="nav-items-editor"></div>
+                    <div class="section-actions nav-editor-actions">
+                        <button type="button" id="add-header-nav-item-btn"
+                            class="btn btn-secondary section-action-btn">Add Nav Item</button>
+                    </div>
+                    <div class="link-grid">
+                        <div class="form-group">
+                            <label for="header_nav_cta_label">CTA Label</label>
+                            <div class="field-with-toggle">
+                                <span class="inline-check">
+                                    <input type="checkbox" id="show_header_nav_cta" name="show_header_nav_cta" checked>
+                                </span>
+                                <input type="text" id="header_nav_cta_label" name="header_nav_cta_label">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="header_nav_cta_url">CTA URL</label>
+                            <input type="text" id="header_nav_cta_url" name="header_nav_cta_url">
+                        </div>
+                    </div>
+
+                    <div class="subsection-title">Footer</div>
+                    <div class="toggle-row">
+                        <label class="toggle-control" for="show_footer">
+                            <input type="checkbox" id="show_footer" name="show_footer" checked>
+                            <span>Show Footer</span>
+                        </label>
+                    </div>
                     <div class="form-group">
-                        <label>Screenshots (Up to 3)</label>
-                        <div class="screenshots-row">
-                            <div class="image-upload-small" id="screenshot-1-upload">
-                                <input type="file" id="screenshot_1_input" accept="image/*" hidden>
-                                <img id="screenshot-1-preview" class="image-preview hidden">
-                                <div class="upload-placeholder-small">1</div>
-                            </div>
-                            <div class="image-upload-small" id="screenshot-2-upload">
-                                <input type="file" id="screenshot_2_input" accept="image/*" hidden>
-                                <img id="screenshot-2-preview" class="image-preview hidden">
-                                <div class="upload-placeholder-small">2</div>
-                            </div>
-                            <div class="image-upload-small" id="screenshot-3-upload">
-                                <input type="file" id="screenshot_3_input" accept="image/*" hidden>
-                                <img id="screenshot-3-preview" class="image-preview hidden">
-                                <div class="upload-placeholder-small">3</div>
+                        <label>Footer Logo</label>
+                        <div class="image-upload" id="footer-logo-upload">
+                            <input type="file" id="footer_logo_input" accept="image/*" hidden>
+                            <img id="footer-logo-preview" class="image-preview hidden">
+                            <button type="button" class="image-clear-btn hidden" id="footer-logo-clear-btn"
+                                aria-label="Clear footer logo" title="Clear footer logo">
+                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                    <path d="M9 3h6"></path>
+                                    <path d="M4 7h16"></path>
+                                    <path d="M6 7l1 13h10l1-13"></path>
+                                    <path d="M10 11v5"></path>
+                                    <path d="M14 11v5"></path>
+                                </svg>
+                            </button>
+                            <div class="upload-placeholder">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="17 8 12 3 7 8" />
+                                    <line x1="12" y1="3" x2="12" y2="15" />
+                                </svg>
+                                <span>Upload Footer Logo</span>
                             </div>
                         </div>
                     </div>
-                </form>
+                    <div class="form-group">
+                        <label for="footer_logo_size">Footer Logo Size</label>
+                        <div class="range-input-row">
+                            <input type="range" id="footer_logo_size" name="footer_logo_size" min="24" max="96" step="1"
+                                value="40">
+                            <input type="number" id="footer_logo_size_number" min="24" max="96" step="1" value="40">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="footer_brand_title">Footer Brand Title</label>
+                        <div class="field-with-toggle">
+                            <span class="inline-check">
+                                <input type="checkbox" id="show_footer_brand_title" name="show_footer_brand_title"
+                                    checked>
+                            </span>
+                            <input type="text" id="footer_brand_title" name="footer_brand_title"
+                                placeholder="Defaults to App Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="footer_brand_subtitle">Footer Brand Subtitle</label>
+                        <div class="field-with-toggle field-with-toggle-area">
+                            <span class="inline-check">
+                                <input type="checkbox" id="show_footer_brand_subtitle" name="show_footer_brand_subtitle"
+                                    checked>
+                            </span>
+                            <textarea id="footer_brand_subtitle" name="footer_brand_subtitle" rows="2"
+                                placeholder="Defaults to Tagline"></textarea>
+                        </div>
+                    </div>
+                    <div class="section-copy">
+                        Click a footer link card to open it, drag to reorder links, and add as many footer items as you
+                        need.
+                    </div>
+                    <div id="footer-nav-items-editor" class="nav-items-editor"></div>
+                    <div class="section-actions nav-editor-actions">
+                        <button type="button" id="add-footer-nav-item-btn"
+                            class="btn btn-secondary section-action-btn">Add Footer Item</button>
+                    </div>
+                    <div class="form-group">
+                        <label for="footer_bottom_text">Copyright Text</label>
+                        <input type="text" id="footer_bottom_text" name="footer_bottom_text"
+                            placeholder="Defaults to © current-year App Name.">
+                    </div>
+                </div>
             </section>
+
         </aside>
 
         <!-- Preview Area -->

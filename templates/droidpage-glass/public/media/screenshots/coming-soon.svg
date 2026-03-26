@@ -1,0 +1,14 @@
+<svg width="1200" height="800" viewBox="0 0 1200 800" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="800" rx="36" fill="#08101D"/>
+  <circle cx="1026" cy="136" r="184" fill="#7C3AED" fill-opacity="0.35"/>
+  <circle cx="166" cy="640" r="218" fill="#38BDF8" fill-opacity="0.22"/>
+  <rect x="164" y="150" width="872" height="500" rx="36" fill="white" fill-opacity="0.1" stroke="white" stroke-opacity="0.18" stroke-width="2"/>
+  <rect x="212" y="214" width="250" height="38" rx="19" fill="white" fill-opacity="0.08"/>
+  <rect x="212" y="292" width="468" height="118" rx="24" fill="white" fill-opacity="0.06"/>
+  <rect x="212" y="454" width="204" height="64" rx="32" fill="#7C3AED"/>
+  <rect x="444" y="454" width="314" height="64" rx="32" fill="white" fill-opacity="0.08"/>
+  <text x="212" y="239" fill="#BFD2FF" font-family="Inter, Arial, sans-serif" font-size="22" letter-spacing="3.52">DROIDPAGE THEME</text>
+  <text x="212" y="350" fill="white" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="700">Glass</text>
+  <text x="212" y="418" fill="#D7E5FF" font-family="Inter, Arial, sans-serif" font-size="36">Coming Soon</text>
+  <text x="482" y="497" fill="white" fill-opacity="0.8" font-family="Inter, Arial, sans-serif" font-size="24">Dummy structure placeholder</text>
+</svg>
