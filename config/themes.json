@@ -59,9 +59,9 @@
   },
   {
     "id": "droidpage-glass",
-    "name": "DroidPage Glass",
-    "description": "Glassmorphism-inspired theme placeholder.",
-    "thumbnail": "templates/droidpage-glass/public/media/screenshots/coming-soon.svg",
+    "name": "Dark Glass",
+    "description": "Dark glassmorphism with frosted panels and neon accent glow.",
+    "thumbnail": "templates/droidpage-glass/public/media/screenshots/notes_list.png",
     "path": "templates/droidpage-glass/",
     "features": ["maxWidth"],
     "colorVars": [
@@ -112,6 +112,122 @@
         "label": "Footer Background",
         "default": "#0f172a",
         "description": "Footer fallback tint"
+      }
+    ]
+  },
+  {
+    "id": "droidpage-editorial",
+    "name": "Minimal Editorial",
+    "description": "Serif magazine layout with generous whitespace and flat ruled sections.",
+    "thumbnail": "templates/droidpage-editorial/public/media/screenshots/notes_list.png",
+    "path": "templates/droidpage-editorial/",
+    "features": ["maxWidth"],
+    "colorVars": [
+      {
+        "key": "primary_color",
+        "label": "Primary / Accent",
+        "default": "#b4452f",
+        "description": "Accent rules, links, eyebrows"
+      },
+      {
+        "key": "bg_color",
+        "label": "Page Background",
+        "default": "#fcfbf7",
+        "description": "Warm paper background"
+      },
+      {
+        "key": "text_primary",
+        "label": "Primary Text",
+        "default": "#1a1a1a",
+        "description": "Headings and body text"
+      },
+      {
+        "key": "text_secondary",
+        "label": "Secondary Text",
+        "default": "#6b6b6b",
+        "description": "Subtitles and captions"
+      },
+      {
+        "key": "card_bg",
+        "label": "Surface",
+        "default": "#fcfbf7",
+        "description": "Section surface tint"
+      },
+      {
+        "key": "border_color",
+        "label": "Rule / Divider",
+        "default": "#e4e0d6",
+        "description": "Hairline rules and dividers"
+      },
+      {
+        "key": "header_bg",
+        "label": "Header Background",
+        "default": "#fcfbf7",
+        "description": "Top navigation bar"
+      },
+      {
+        "key": "footer_bg",
+        "label": "Footer Background",
+        "default": "#1a1a1a",
+        "description": "Footer section"
+      }
+    ]
+  },
+  {
+    "id": "droidpage-playful",
+    "name": "Playful Gradient",
+    "description": "Vibrant gradients, chunky rounded cards and bouncy hover motion.",
+    "thumbnail": "templates/droidpage-playful/public/media/screenshots/notes_list.png",
+    "path": "templates/droidpage-playful/",
+    "features": ["maxWidth"],
+    "colorVars": [
+      {
+        "key": "primary_color",
+        "label": "Primary / Accent",
+        "default": "#ff4d9d",
+        "description": "Gradient start, buttons, highlights"
+      },
+      {
+        "key": "bg_color",
+        "label": "Page Background",
+        "default": "#fff7fb",
+        "description": "Soft tinted page background"
+      },
+      {
+        "key": "text_primary",
+        "label": "Primary Text",
+        "default": "#1f1147",
+        "description": "Headings and body text"
+      },
+      {
+        "key": "text_secondary",
+        "label": "Secondary Text",
+        "default": "#6d5f99",
+        "description": "Subtitles and captions"
+      },
+      {
+        "key": "card_bg",
+        "label": "Card Background",
+        "default": "#ffffff",
+        "description": "Chunky cards and panels"
+      },
+      {
+        "key": "border_color",
+        "label": "Border / Divider",
+        "default": "#f0d9ec",
+        "description": "Soft borders and dividers"
+      },
+      {
+        "key": "header_bg",
+        "label": "Header Background",
+        "default": "#fff7fb",
+        "description": "Top navigation bar"
+      },
+      {
+        "key": "footer_bg",
+        "label": "Footer Background",
+        "default": "#1f1147",
+        "description": "Footer section"
       }
     ]
   }
