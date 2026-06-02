@@ -3,6 +3,7 @@ import { FormManager } from './formManager.js';
 import { Renderer } from './renderer.js';
 import { Preview } from './preview.js';
 import { Exporter } from './exporter.js';
+import { FEATURE_ICONS, FEATURE_ICON_OPTIONS, featureIconSvg } from './icons.js';
 
 const FONT_OPTIONS = [
     { value: 'inter', label: 'Inter' },
@@ -32,9 +33,11 @@ const LIVE_CONTENT_FIELDS = new Set([
     'tagline',
     'description',
     'play_store_link',
-    'screenshot_1',
-    'screenshot_2',
-    'screenshot_3',
+    'features',
+    'screenshots',
+    'favicon',
+    'meta_title',
+    'meta_description',
     'show_header',
     'sticky_header',
     'header_logo',
@@ -72,6 +75,7 @@ class DroidPageApp {
     constructor() {
         this.collapsedNavItems = new Set();
         this.collapsedFooterNavItems = new Set();
+        this.collapsedFeatures = new Set();
         this.colorPickerSuggestions = ['#0F172A', '#1D4ED8', '#2563EB', '#7C3AED', '#DB2777', '#EA580C', '#CA8A04', '#16A34A', '#0891B2', '#64748B', '#F8FAFC', '#111827'];
         document.body.classList.add('sidebar-pre-init');
         this.init();
@@ -81,6 +85,9 @@ class DroidPageApp {
         this.applySavedTheme();
 
         this.log('Initializing form managers...');
+        FormManager.onHistoryChange = (canUndo, canRedo) => this.updateUndoRedoButtons(canUndo, canRedo);
+        FormManager.onRestore = (data) => this.handleHistoryRestore(data);
+        FormManager.onSave = () => this.flashSaveIndicator();
         FormManager.init((data, changedField) => this.handleFormChange(data, changedField));
 
         this.log('Connecting to preview renderer...');
@@ -91,7 +98,11 @@ class DroidPageApp {
         this.renderThemeList(themes);
 
         this.log('Restoring previous project...');
-        const initialTheme = ThemeManager.getSelectedTheme();
+        const requestedThemeId = new URLSearchParams(window.location.search).get('theme');
+        const requestedTheme = requestedThemeId
+            ? themes.find(theme => theme.id === requestedThemeId)
+            : null;
+        const initialTheme = requestedTheme || ThemeManager.getSelectedTheme();
         this.setActiveTheme(initialTheme);
         this.populateForm(FormManager.formData);
 
@@ -775,6 +786,317 @@ class DroidPageApp {
         });
     }
 
+    /* ── Features Editor ─────────────────────────────────── */
+    getFeatures() {
+        try {
+            const parsed = JSON.parse(FormManager.formData.features || '[]');
+            if (!Array.isArray(parsed)) return [];
+            return parsed.map((item, index) => ({
+                id: item.id || `feat_${index}`,
+                icon: FEATURE_ICONS[item.icon] ? item.icon : 'sparkles',
+                title: item.title || '',
+                text: item.text || '',
+                tags: Array.isArray(item.tags) ? item.tags : []
+            }));
+        } catch (error) {
+            console.error('Error parsing features:', error);
+            return [];
+        }
+    }
+
+    saveFeatures(items) {
+        FormManager.updateField('features', JSON.stringify(items));
+    }
+
+    createFeature() {
+        return {
+            id: `feat_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+            icon: 'sparkles',
+            title: 'New Feature',
+            text: 'Describe this feature.',
+            tags: []
+        };
+    }
+
+    renderFeaturesEditor() {
+        const container = document.getElementById('features-editor');
+        if (!container) return;
+
+        const items = this.getFeatures();
+        if (this.collapsedFeatures.size === 0) {
+            items.forEach((item) => this.collapsedFeatures.add(item.id));
+        }
+        container.innerHTML = '';
+
+        items.forEach((item) => {
+            const isCollapsed = this.collapsedFeatures.has(item.id);
+            const safeTitle = this.escapeHtml(item.title || '');
+            const safeText = this.escapeHtml(item.text || '');
+            const safeTags = this.escapeHtml((item.tags || []).join(', '));
+            const card = document.createElement('article');
+            card.className = `nav-item-card${isCollapsed ? ' collapsed' : ''}`;
+            card.draggable = true;
+            card.dataset.id = item.id;
+            const iconOptions = FEATURE_ICON_OPTIONS.map((name) => `
+                <option value="${name}"${name === item.icon ? ' selected' : ''}>${name}</option>
+            `).join('');
+            card.innerHTML = `
+                <div class="nav-item-header">
+                    <button type="button" class="nav-item-handle" title="Drag to reorder" aria-label="Drag to reorder">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="9" cy="7" r="1.4"></circle>
+                            <circle cx="15" cy="7" r="1.4"></circle>
+                            <circle cx="9" cy="12" r="1.4"></circle>
+                            <circle cx="15" cy="12" r="1.4"></circle>
+                            <circle cx="9" cy="17" r="1.4"></circle>
+                            <circle cx="15" cy="17" r="1.4"></circle>
+                        </svg>
+                    </button>
+                    <div class="nav-item-title">
+                        <span class="feature-item-icon">${featureIconSvg(item.icon, 'feature-item-icon-svg')}</span>
+                        <span class="nav-item-label">${safeTitle || 'New Feature'}</span>
+                    </div>
+                    <button type="button" class="nav-item-toggle" title="${isCollapsed ? 'Open item' : 'Collapse item'}" aria-label="${isCollapsed ? 'Open item' : 'Collapse item'}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <polyline points="8 10 12 14 16 10"></polyline>
+                        </svg>
+                    </button>
+                    <button type="button" class="nav-item-remove" title="Remove feature" aria-label="Remove feature">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M9 3h6"></path>
+                            <path d="M4 7h16"></path>
+                            <path d="M6 7l1 13h10l1-13"></path>
+                            <path d="M10 11v5"></path>
+                            <path d="M14 11v5"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="nav-item-body">
+                    <div class="form-group">
+                        <label>Icon</label>
+                        <select data-feat-field="icon">${iconOptions}</select>
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" value="${safeTitle}" data-feat-field="title">
+                    </div>
+                    <div class="form-group">
+                        <label>Text</label>
+                        <textarea rows="2" data-feat-field="text">${safeText}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Tags (comma separated)</label>
+                        <input type="text" value="${safeTags}" data-feat-field="tags" placeholder="E.g. Fast, Secure">
+                    </div>
+                </div>
+            `;
+
+            const iconSelect = card.querySelector('[data-feat-field="icon"]');
+            const titleInput = card.querySelector('[data-feat-field="title"]');
+            const textInput = card.querySelector('[data-feat-field="text"]');
+            const tagsInput = card.querySelector('[data-feat-field="tags"]');
+            const labelPreview = card.querySelector('.nav-item-label');
+            const iconPreview = card.querySelector('.feature-item-icon');
+            const header = card.querySelector('.nav-item-header');
+            const toggleButton = card.querySelector('.nav-item-toggle');
+            const removeButton = card.querySelector('.nav-item-remove');
+            const handleButton = card.querySelector('.nav-item-handle');
+
+            const patchFeature = (patch) => {
+                const nextItems = this.getFeatures().map((feat) => (
+                    feat.id === item.id ? { ...feat, ...patch } : feat
+                ));
+                this.saveFeatures(nextItems);
+            };
+
+            iconSelect.addEventListener('change', (e) => {
+                iconPreview.innerHTML = featureIconSvg(e.target.value, 'feature-item-icon-svg');
+                patchFeature({ icon: e.target.value });
+            });
+            titleInput.addEventListener('input', (e) => {
+                labelPreview.textContent = e.target.value || 'New Feature';
+                patchFeature({ title: e.target.value });
+            });
+            textInput.addEventListener('input', (e) => patchFeature({ text: e.target.value }));
+            tagsInput.addEventListener('input', (e) => {
+                const tags = e.target.value.split(',').map((tag) => tag.trim()).filter(Boolean);
+                patchFeature({ tags });
+            });
+
+            [iconSelect, titleInput, textInput, tagsInput].forEach((input) => {
+                input.addEventListener('click', (e) => e.stopPropagation());
+                input.addEventListener('mousedown', (e) => e.stopPropagation());
+            });
+
+            const syncToggleState = () => {
+                const currentlyCollapsed = card.classList.contains('collapsed');
+                toggleButton.title = currentlyCollapsed ? 'Open item' : 'Collapse item';
+                toggleButton.setAttribute('aria-label', currentlyCollapsed ? 'Open item' : 'Collapse item');
+            };
+
+            const toggleCollapsed = () => {
+                if (this.collapsedFeatures.has(item.id)) {
+                    this.collapsedFeatures.delete(item.id);
+                } else {
+                    this.collapsedFeatures.add(item.id);
+                }
+                card.classList.toggle('collapsed');
+                syncToggleState();
+            };
+
+            syncToggleState();
+
+            header.addEventListener('click', (e) => {
+                if (e.target.closest('.nav-item-remove') || e.target.closest('.nav-item-handle')) return;
+                toggleCollapsed();
+            });
+
+            toggleButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleCollapsed();
+            });
+
+            removeButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const nextItems = this.getFeatures().filter((feat) => feat.id !== item.id);
+                this.collapsedFeatures.delete(item.id);
+                this.saveFeatures(nextItems);
+                this.renderFeaturesEditor();
+            });
+
+            handleButton.addEventListener('mousedown', (e) => e.stopPropagation());
+
+            card.addEventListener('dragstart', () => card.classList.add('dragging'));
+            card.addEventListener('dragend', () => card.classList.remove('dragging'));
+            card.addEventListener('dragover', (e) => e.preventDefault());
+            card.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedId = container.querySelector('.nav-item-card.dragging')?.dataset.id;
+                const targetId = card.dataset.id;
+                if (!draggedId || !targetId || draggedId === targetId) return;
+                const nextItems = this.getFeatures();
+                const fromIndex = nextItems.findIndex((feat) => feat.id === draggedId);
+                const toIndex = nextItems.findIndex((feat) => feat.id === targetId);
+                if (fromIndex === -1 || toIndex === -1) return;
+                const [moved] = nextItems.splice(fromIndex, 1);
+                nextItems.splice(toIndex, 0, moved);
+                this.saveFeatures(nextItems);
+                this.renderFeaturesEditor();
+            });
+
+            container.appendChild(card);
+        });
+    }
+
+    /* ── Screenshots Editor ──────────────────────────────── */
+    getScreenshots() {
+        try {
+            const parsed = JSON.parse(FormManager.formData.screenshots || '[]');
+            if (!Array.isArray(parsed)) return [];
+            return parsed.map((item, index) => ({
+                id: item.id || `shot_${index}`,
+                src: item.src || ''
+            }));
+        } catch (error) {
+            console.error('Error parsing screenshots:', error);
+            return [];
+        }
+    }
+
+    saveScreenshots(items) {
+        FormManager.updateField('screenshots', JSON.stringify(items));
+    }
+
+    renderScreenshotsEditor() {
+        const container = document.getElementById('screenshots-editor');
+        if (!container) return;
+
+        const items = this.getScreenshots();
+        container.innerHTML = '';
+
+        items.forEach((item, index) => {
+            const card = document.createElement('div');
+            card.className = 'screenshot-card';
+            card.draggable = true;
+            card.dataset.id = item.id;
+            const hasImage = Boolean(item.src);
+            card.innerHTML = `
+                <button type="button" class="screenshot-handle" title="Drag to reorder" aria-label="Drag to reorder">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="9" cy="7" r="1.4"></circle>
+                        <circle cx="15" cy="7" r="1.4"></circle>
+                        <circle cx="9" cy="12" r="1.4"></circle>
+                        <circle cx="15" cy="12" r="1.4"></circle>
+                        <circle cx="9" cy="17" r="1.4"></circle>
+                        <circle cx="15" cy="17" r="1.4"></circle>
+                    </svg>
+                </button>
+                <div class="screenshot-thumb${hasImage ? '' : ' is-empty'}">
+                    ${hasImage ? `<img src="${item.src}" alt="Screenshot ${index + 1}">` : `<span>${index + 1}</span>`}
+                    <input type="file" accept="image/*" hidden data-shot-input>
+                </div>
+                <button type="button" class="screenshot-remove" title="Remove screenshot" aria-label="Remove screenshot">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9 3h6"></path>
+                        <path d="M4 7h16"></path>
+                        <path d="M6 7l1 13h10l1-13"></path>
+                        <path d="M10 11v5"></path>
+                        <path d="M14 11v5"></path>
+                    </svg>
+                </button>
+            `;
+
+            const thumb = card.querySelector('.screenshot-thumb');
+            const fileInput = card.querySelector('[data-shot-input]');
+            const removeButton = card.querySelector('.screenshot-remove');
+            const handleButton = card.querySelector('.screenshot-handle');
+
+            thumb.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const nextItems = this.getScreenshots().map((shot) => (
+                        shot.id === item.id ? { ...shot, src: ev.target.result } : shot
+                    ));
+                    this.saveScreenshots(nextItems);
+                    this.renderScreenshotsEditor();
+                };
+                reader.readAsDataURL(file);
+            });
+
+            removeButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const nextItems = this.getScreenshots().filter((shot) => shot.id !== item.id);
+                this.saveScreenshots(nextItems);
+                this.renderScreenshotsEditor();
+            });
+
+            handleButton.addEventListener('mousedown', (e) => e.stopPropagation());
+
+            card.addEventListener('dragstart', () => card.classList.add('dragging'));
+            card.addEventListener('dragend', () => card.classList.remove('dragging'));
+            card.addEventListener('dragover', (e) => e.preventDefault());
+            card.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggedId = container.querySelector('.screenshot-card.dragging')?.dataset.id;
+                const targetId = card.dataset.id;
+                if (!draggedId || !targetId || draggedId === targetId) return;
+                const nextItems = this.getScreenshots();
+                const fromIndex = nextItems.findIndex((shot) => shot.id === draggedId);
+                const toIndex = nextItems.findIndex((shot) => shot.id === targetId);
+                if (fromIndex === -1 || toIndex === -1) return;
+                const [moved] = nextItems.splice(fromIndex, 1);
+                nextItems.splice(toIndex, 0, moved);
+                this.saveScreenshots(nextItems);
+                this.renderScreenshotsEditor();
+            });
+
+            container.appendChild(card);
+        });
+    }
+
     /* ── Form Population ─────────────────────────────────── */
     populateForm(data) {
         Object.keys(data).forEach(key => {
@@ -809,11 +1131,11 @@ class DroidPageApp {
         if (data.app_icon)     this.showPreview('icon-preview', data.app_icon);
         if (data.header_logo)  this.showPreview('header-logo-preview', data.header_logo);
         if (data.footer_logo)  this.showPreview('footer-logo-preview', data.footer_logo);
-        if (data.screenshot_1) this.showPreview('screenshot-1-preview', data.screenshot_1);
-        if (data.screenshot_2) this.showPreview('screenshot-2-preview', data.screenshot_2);
-        if (data.screenshot_3) this.showPreview('screenshot-3-preview', data.screenshot_3);
+        if (data.favicon)      this.showPreview('favicon-preview', data.favicon);
         this.renderHeaderNavItemsEditor();
         this.renderFooterNavItemsEditor();
+        this.renderFeaturesEditor();
+        this.renderScreenshotsEditor();
     }
 
     showPreview(imgId, src) {
@@ -1050,6 +1372,40 @@ class DroidPageApp {
             this.renderFooterNavItemsEditor();
         });
 
+        document.getElementById('add-feature-btn')?.addEventListener('click', () => {
+            const newFeature = this.createFeature();
+            const nextItems = [...this.getFeatures(), newFeature];
+            this.saveFeatures(nextItems);
+            this.renderFeaturesEditor();
+        });
+
+        const addScreenshotInput = document.getElementById('screenshot-add-input');
+        document.getElementById('add-screenshot-btn')?.addEventListener('click', () => {
+            addScreenshotInput?.click();
+        });
+        addScreenshotInput?.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files || []);
+            if (!files.length) return;
+            let pending = files.length;
+            const current = this.getScreenshots();
+            files.forEach((file, offset) => {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    current.push({
+                        id: `shot_${Date.now()}_${offset}_${Math.random().toString(36).slice(2, 6)}`,
+                        src: ev.target.result
+                    });
+                    pending -= 1;
+                    if (pending === 0) {
+                        this.saveScreenshots(current);
+                        this.renderScreenshotsEditor();
+                    }
+                };
+                reader.readAsDataURL(file);
+            });
+            e.target.value = '';
+        });
+
         if (headerLogoSizeNumber) {
             headerLogoSizeNumber.addEventListener('input', (e) => {
                 const clamped = Math.min(96, Math.max(24, parseInt(e.target.value || '46', 10)));
@@ -1072,9 +1428,7 @@ class DroidPageApp {
         this.setupImageUpload('icon-upload',        'app_icon_input',    'icon-preview',        'app_icon');
         this.setupImageUpload('header-logo-upload', 'header_logo_input', 'header-logo-preview', 'header_logo', 'header-logo-clear-btn');
         this.setupImageUpload('footer-logo-upload', 'footer_logo_input', 'footer-logo-preview', 'footer_logo', 'footer-logo-clear-btn');
-        this.setupImageUpload('screenshot-1-upload','screenshot_1_input','screenshot-1-preview','screenshot_1');
-        this.setupImageUpload('screenshot-2-upload','screenshot_2_input','screenshot-2-preview','screenshot_2');
-        this.setupImageUpload('screenshot-3-upload','screenshot_3_input','screenshot-3-preview','screenshot_3');
+        this.setupImageUpload('favicon-upload',     'favicon_input',     'favicon-preview',     'favicon', 'favicon-clear-btn');
 
         // Action buttons
         document.getElementById('download-btn').addEventListener('click', () => this.handleDownload());
@@ -1084,6 +1438,29 @@ class DroidPageApp {
             else if (iframe.webkitRequestFullscreen) iframe.webkitRequestFullscreen();
             else if (iframe.msRequestFullscreen)     iframe.msRequestFullscreen();
         });
+        document.getElementById('undo-btn')?.addEventListener('click', () => {
+            if (FormManager.undo()) this.handleHistoryRestore(FormManager.formData);
+        });
+        document.getElementById('redo-btn')?.addEventListener('click', () => {
+            if (FormManager.redo()) this.handleHistoryRestore(FormManager.formData);
+        });
+        document.addEventListener('keydown', (e) => {
+            const isMeta = e.ctrlKey || e.metaKey;
+            if (!isMeta) return;
+            const key = e.key.toLowerCase();
+            const isRedo = key === 'y' || (key === 'z' && e.shiftKey);
+            if (key !== 'z' && key !== 'y') return;
+            const target = e.target;
+            const isTyping = target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+            if (isTyping) return;
+            e.preventDefault();
+            if (isRedo) {
+                if (FormManager.redo()) this.handleHistoryRestore(FormManager.formData);
+            } else if (FormManager.undo()) {
+                this.handleHistoryRestore(FormManager.formData);
+            }
+        });
+
         document.getElementById('reset-btn').addEventListener('click', () => FormManager.reset());
         document.getElementById('reset-theme-colors-btn').addEventListener('click', () => this.resetThemeColors());
         document.getElementById('export-json-btn').addEventListener('click', () => FormManager.exportJSON());
@@ -1156,6 +1533,30 @@ class DroidPageApp {
                 this.showPreview(previewId, base64);
             }
         });
+    }
+
+    /* ── Undo / Redo & Save Indicator ────────────────────── */
+    updateUndoRedoButtons(canUndo, canRedo) {
+        const undoBtn = document.getElementById('undo-btn');
+        const redoBtn = document.getElementById('redo-btn');
+        if (undoBtn) undoBtn.disabled = !canUndo;
+        if (redoBtn) redoBtn.disabled = !canRedo;
+    }
+
+    handleHistoryRestore(data) {
+        this.collapsedFeatures.clear();
+        this.populateForm(data);
+        this.refreshPreview();
+    }
+
+    flashSaveIndicator() {
+        const indicator = document.getElementById('save-indicator');
+        if (!indicator) return;
+        indicator.classList.add('is-saving');
+        clearTimeout(this.saveIndicatorTimer);
+        this.saveIndicatorTimer = setTimeout(() => {
+            indicator.classList.remove('is-saving');
+        }, 900);
     }
 
     /* ── Preview Refresh ─────────────────────────────────── */

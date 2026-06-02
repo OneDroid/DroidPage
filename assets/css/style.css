@@ -149,6 +149,7 @@ body {
     font-weight: 700;
     font-size: 1.5rem;
     color: var(--primary-color);
+    text-decoration: none;
 }
 
 .logo-icon {
@@ -891,6 +892,151 @@ input[type="color"] {
 .upload-placeholder-small {
     font-size: 0.75rem;
     color: var(--text-secondary);
+}
+
+/* Features editor icon preview */
+.feature-item-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.feature-item-icon-svg {
+    width: 18px;
+    height: 18px;
+}
+
+.nav-item-card .nav-item-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* Screenshots editor */
+.screenshots-editor {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.screenshot-card {
+    position: relative;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--input-bg);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: var(--transition);
+}
+
+.screenshot-card.dragging {
+    opacity: 0.5;
+}
+
+.screenshot-thumb {
+    position: relative;
+    aspect-ratio: 9/16;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--card-bg, var(--input-bg));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.screenshot-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.screenshot-thumb.is-empty {
+    border: 2px dashed var(--border-color);
+}
+
+.screenshot-thumb.is-empty span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.screenshot-handle,
+.screenshot-remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+
+.screenshot-handle {
+    cursor: grab;
+    align-self: center;
+}
+
+.screenshot-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: var(--input-bg);
+}
+
+.screenshot-remove:hover {
+    color: var(--danger-color, #dc2626);
+}
+
+.screenshot-handle svg,
+.screenshot-remove svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.screenshot-handle svg circle {
+    fill: currentColor;
+    stroke: none;
+}
+
+/* Save indicator */
+.save-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0 10px;
+    height: 36px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    opacity: 0.6;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.save-indicator.is-saving {
+    opacity: 1;
+    color: var(--primary-color);
+}
+
+.save-indicator svg {
+    width: 15px;
+    height: 15px;
 }
 
 /* Preview Area */

@@ -1,4 +1,49 @@
+import { featureIconSvg } from './icons.js';
+
 export const Renderer = {
+    escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    },
+
+    parseJsonField(raw, fallback = []) {
+        try {
+            const parsed = JSON.parse(raw || '[]');
+            return Array.isArray(parsed) ? parsed : fallback;
+        } catch (error) {
+            return fallback;
+        }
+    },
+
+    buildFeaturesMarkup(items) {
+        return items.map((item) => {
+            const tags = Array.isArray(item.tags) ? item.tags : [];
+            const tagsMarkup = tags.length
+                ? `<div class="feature-tags">${tags.map((tag) => `<span>${this.escapeHtml(tag)}</span>`).join('')}</div>`
+                : '';
+            return `
+                <article class="feature-card">
+                    <div class="feature-icon">${featureIconSvg(item.icon)}</div>
+                    <h3>${this.escapeHtml(item.title || '')}</h3>
+                    <p>${this.escapeHtml(item.text || '')}</p>
+                    ${tagsMarkup}
+                </article>
+            `;
+        }).join('');
+    },
+
+    buildScreenshotsMarkup(items) {
+        return items.map((item, index) => `
+            <div class="screenshot-item">
+                <img src="${item.src || ''}" alt="App Screenshot ${index + 1}" loading="lazy">
+            </div>
+        `).join('');
+    },
+
     buildHeaderNavMarkup(items) {
         return items.map((item) => {
             const subitems = Array.isArray(item.subitems) ? item.subitems : [];
@@ -64,8 +109,17 @@ export const Renderer = {
         const hasFooterBrand = showFooterTitle || showFooterSubtitle || Boolean(data.footer_logo);
         const hasFooterNav = footerNavItems.length > 0;
 
+        const featureItems = this.parseJsonField(data.features);
+        const screenshotItems = this.parseJsonField(data.screenshots);
+
         const mergedData = {
             ...data,
+            features_markup: this.buildFeaturesMarkup(featureItems),
+            screenshots_markup: this.buildScreenshotsMarkup(screenshotItems),
+            hero_screenshot: screenshotItems.find((shot) => shot.src)?.src || '',
+            favicon_markup: data.favicon
+                ? `<link rel="icon" href="${data.favicon}">`
+                : '',
             header_logo_markup: data.header_logo
                 ? `<img src="${data.header_logo}" alt="${data.header_logo_title || data.app_name} logo" class="header-brand-logo">`
                 : '',

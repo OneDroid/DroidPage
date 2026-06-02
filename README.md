@@ -12,18 +12,23 @@ DroidPage is a client-side, production-ready landing page builder for mobile app
 
 ## How to Use
 1. Open `index.html` in any modern web browser.
-2. Select a theme from the sidebar.
-3. Fill in your app name, tagline, description, and links.
-4. Upload your icon and screenshots.
-5. Click **Download Website** to get your files.
+2. Browse the available themes on the home page.
+3. Click **Live Demo** to preview a theme in a new tab, or **Edit** to open it in the editor.
+4. In the editor, select a theme and fill in your app name, tagline, description, and links.
+5. Upload your icon and screenshots, then tweak colors, fonts, header, and footer.
+6. Click **Download Website** to export a ready-to-host ZIP.
+
+## Pages
+- `index.html`: Home page — responsive navbar (About / Themes / Editor), hero, and the theme gallery.
+- `editor.html`: The builder interface. Accepts `?theme=<id>` to preselect a theme.
+- `demo.html`: Standalone live preview. Accepts `?theme=<id>` and renders the theme with demo content.
 
 ## Project Structure
-- `index.html`: Main builder interface.
-- `assets/`: 
-  - `css/`: Styling for the builder.
-  - `js/`: Modular JavaScript logic (`app.js`, `themeManager.js`, `formManager.js`, etc.).
-- `templates/`: Theme templates with placeholder syntax.
-- `config/`: Metadata for themes.
+- `assets/`:
+  - `css/`: `home.css` (landing page) and `style.css` (builder); `global.css` is shared by templates.
+  - `js/`: Modular ES6 logic — `home.js`, `demo.js`, `app.js`, `themeManager.js`, `formManager.js`, `renderer.js`, `preview.js`, `exporter.js`.
+- `templates/`: Theme templates with `{{placeholder}}` syntax.
+- `config/`: `themes.json` metadata for the available themes.
 
 ## Technology Stack
 - HTML5 / CSS3 (Vanilla)

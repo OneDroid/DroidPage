@@ -1,22 +1,52 @@
+const DEFAULT_FEATURES = [
+    {
+        id: 'feat_rich',
+        icon: 'sparkles',
+        title: 'Beautiful by default',
+        text: 'A polished, modern interface with dynamic theming and tactile mobile interactions out of the box.',
+        tags: ['Material 3', 'Dynamic']
+    },
+    {
+        id: 'feat_secure',
+        icon: 'lock',
+        title: 'Private & secure',
+        text: 'Lock individual notes with a PIN or pattern and keep personal writing organized without giving up control.',
+        tags: ['Lock', 'Trash']
+    },
+    {
+        id: 'feat_offline',
+        icon: 'offline',
+        title: 'Offline first',
+        text: 'All data is stored locally with no tracking and no cloud requirement. Your data stays yours.',
+        tags: ['Local DB', 'Backup']
+    }
+];
+
+const DEFAULT_SCREENSHOTS = [
+    { id: 'shot_1', src: '' },
+    { id: 'shot_2', src: '' },
+    { id: 'shot_3', src: '' }
+];
+
 export const FormManager = {
     formData: {
         app_name: 'My Awesome App',
         tagline: 'The Best Mobile Experience',
         description: 'Describe what makes your mobile app unique and why people should download it.',
         app_icon: '',
-        screenshot_1: '',
-        screenshot_2: '',
-        screenshot_3: '',
+        favicon: '',
+        screenshots: '',
+        features: '',
         play_store_link: 'https://play.google.com/store',
         font_family: 'manrope',
-        primary_color: '#3b82f6',
-        bg_color: '#010409',
+        primary_color: '#6366f1',
+        bg_color: '#ffffff',
         text_primary: '#0f172a',
         text_secondary: '#64748b',
-        card_bg: '#0d1117',
-        border_color: '#e2e8f0',
-        header_bg: '#0d1117',
-        footer_bg: '#0d1117',
+        card_bg: '#f8fafc',
+        border_color: '#e6eaf2',
+        header_bg: '#ffffff',
+        footer_bg: '#0f172a',
         show_header: 'true',
         sticky_header: 'true',
         header_logo: '',
@@ -104,13 +134,86 @@ export const FormManager = {
                 }
             ]);
         }
+        if (!this.formData.features) {
+            this.formData.features = JSON.stringify(DEFAULT_FEATURES);
+        }
+
+        if (!this.formData.screenshots) {
+            const legacy = [this.formData.screenshot_1, this.formData.screenshot_2, this.formData.screenshot_3]
+                .filter(Boolean)
+                .map((src, index) => ({ id: `shot_${index + 1}`, src }));
+            this.formData.screenshots = JSON.stringify(legacy.length ? legacy : DEFAULT_SCREENSHOTS);
+        }
+        ['screenshot_1', 'screenshot_2', 'screenshot_3'].forEach((key) => delete this.formData[key]);
+
         this.onChange = onChange;
+        this.pushHistory(true);
     },
 
     updateField(name, value) {
         this.formData[name] = value;
         this.save();
+        this.pushHistory();
         if (this.onChange) this.onChange(this.formData, name);
+    },
+
+    /* ── Undo / Redo history ─────────────────────────────── */
+    history: [],
+    historyIndex: -1,
+    historyTimer: null,
+
+    snapshot() {
+        return JSON.stringify(this.formData);
+    },
+
+    pushHistory(immediate = false) {
+        const commit = () => {
+            const snap = this.snapshot();
+            if (this.history[this.historyIndex] === snap) return;
+            this.history = this.history.slice(0, this.historyIndex + 1);
+            this.history.push(snap);
+            if (this.history.length > 100) this.history.shift();
+            this.historyIndex = this.history.length - 1;
+            if (this.onHistoryChange) this.onHistoryChange(this.canUndo(), this.canRedo());
+        };
+        clearTimeout(this.historyTimer);
+        if (immediate) return commit();
+        this.historyTimer = setTimeout(commit, 400);
+    },
+
+    canUndo() {
+        return this.historyIndex > 0;
+    },
+
+    canRedo() {
+        return this.historyIndex < this.history.length - 1;
+    },
+
+    undo() {
+        if (!this.canUndo()) return false;
+        clearTimeout(this.historyTimer);
+        this.historyIndex -= 1;
+        this.restoreSnapshot(this.history[this.historyIndex]);
+        return true;
+    },
+
+    redo() {
+        if (!this.canRedo()) return false;
+        clearTimeout(this.historyTimer);
+        this.historyIndex += 1;
+        this.restoreSnapshot(this.history[this.historyIndex]);
+        return true;
+    },
+
+    restoreSnapshot(snap) {
+        try {
+            this.formData = JSON.parse(snap);
+        } catch (e) {
+            return;
+        }
+        this.save();
+        if (this.onHistoryChange) this.onHistoryChange(this.canUndo(), this.canRedo());
+        if (this.onRestore) this.onRestore(this.formData);
     },
 
     async handleImageUpload(name, file) {
@@ -128,6 +231,7 @@ export const FormManager = {
 
     save() {
         localStorage.setItem('droidpage_form_data', JSON.stringify(this.formData));
+        if (this.onSave) this.onSave();
     },
 
     reset() {
