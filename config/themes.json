@@ -10,7 +10,7 @@
       {
         "key": "primary_color",
         "label": "Primary / Accent",
-        "default": "#3b82f6",
+        "default": "#6366f1",
         "description": "Buttons, links, highlights"
       },
       {
@@ -40,19 +40,19 @@
       {
         "key": "border_color",
         "label": "Border / Divider",
-        "default": "#e2e8f0",
+        "default": "#e6eaf2",
         "description": "Card borders, dividers"
       },
       {
         "key": "header_bg",
         "label": "Header Background",
-        "default": "#0f172a",
+        "default": "#ffffff",
         "description": "Top navigation bar"
       },
       {
         "key": "footer_bg",
         "label": "Footer Background",
-        "default": "#020617",
+        "default": "#0f172a",
         "description": "Footer section"
       }
     ]

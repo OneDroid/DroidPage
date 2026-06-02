@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{meta_description}}">
     <title>{{meta_title}}</title>
+    {{favicon_markup}}
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
     <link rel="stylesheet" href="../../assets/css/global.css">
@@ -23,14 +24,19 @@
     <header class="site-header {{header_sticky_class}} {{header_visibility_class}}" id="site-header">
         <div class="container">
             <a href="#" class="header-brand" id="header-brand">
-                <img src="public/media/img/header-logo.png" alt="{{app_name}} logo" class="header-brand-logo" data-default-src="public/media/img/header-logo.png">
+                <img src="public/media/img/header-logo.png" alt="{{app_name}} logo" class="header-brand-logo"
+                    data-default-src="public/media/img/header-logo.png">
                 <span class="header-brand-copy">
                     <span class="header-brand-title {{header_logo_title_class}}" id="header-brand-title">{{header_logo_title}}</span>
                     <span class="header-brand-subtitle {{header_logo_subtitle_class}}" id="header-brand-subtitle">{{header_logo_subtitle}}</span>
                 </span>
             </a>
 
-            <nav class="site-nav">
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="site-nav" id="site-nav">
                 <ul class="header-nav" id="header-nav-list">
                     {{header_nav_items_markup}}
                     {{header_nav_cta_markup}}
@@ -41,52 +47,84 @@
 
     <main class="landing-shell">
         <section class="hero" id="home">
-            <div class="container hero-layout">
-                <div class="hero-mark" aria-hidden="true">
-                    <span class="hero-mark-inner">OD</span>
-                </div>
+            <div class="container hero-grid">
                 <div class="hero-copy">
-                    <p class="hero-kicker">Minimal Android Landing Page</p>
+                    <span class="hero-kicker">Now available on Android</span>
                     <h1 id="hero-app-name">{{app_name}}</h1>
                     <p class="hero-tagline" id="hero-tagline">{{tagline}}</p>
                     <div class="hero-actions">
-                        <a href="{{play_store_link}}" class="hero-link primary-link" target="_blank" rel="noopener" id="hero-play-store-link">Visit Play Store</a>
-                        <a href="#screenshots" class="hero-link">See Screenshots</a>
+                        <a href="{{play_store_link}}" class="btn btn-primary" target="_blank" rel="noopener"
+                            id="hero-play-store-link">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m3 3 14 9-14 9Z"></path>
+                            </svg>
+                            Get it on Google Play
+                        </a>
+                        <a href="#screenshots" class="btn btn-ghost">See screenshots</a>
                     </div>
+                    <div class="hero-trust">
+                        <div class="trust-stat">
+                            <span class="trust-value">4.9</span>
+                            <span class="trust-label">App rating</span>
+                        </div>
+                        <div class="trust-divider"></div>
+                        <div class="trust-stat">
+                            <span class="trust-value">50K+</span>
+                            <span class="trust-label">Downloads</span>
+                        </div>
+                        <div class="trust-divider"></div>
+                        <div class="trust-stat">
+                            <span class="trust-value">Free</span>
+                            <span class="trust-label">No ads</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-device" aria-hidden="true">
+                    <div class="device-frame">
+                        <span class="device-speaker"></span>
+                        <img class="device-screen" id="hero-device-img" src="{{hero_screenshot}}" alt="">
+                        <span class="device-screen-empty">Your screenshot</span>
+                    </div>
+                    <div class="hero-glow"></div>
                 </div>
             </div>
         </section>
 
-        <section class="content-section intro-section" id="features">
+        <section class="content-section features-section" id="features">
             <div class="container">
                 <div class="section-heading">
-                    <span class="section-index">(01)</span>
-                    <span class="section-heading-text">Features</span>
+                    <span class="section-eyebrow">Features</span>
+                    <h2 class="section-title">Everything you need, nothing you don't</h2>
                 </div>
+                <div class="feature-grid" id="feature-grid">
+                    {{features_markup}}
+                </div>
+            </div>
+        </section>
 
-                <div class="intro-grid">
-                    <article class="panel panel-copy">
-                        <p class="intro-lead"><strong id="intro-app-name">{{header_logo_title}}</strong> is built for an offline-first experience with a beautiful, dynamic UI. Backup and restore your notes easily.</p>
+        <section class="content-section about-section" id="about">
+            <div class="container">
+                <div class="about-card">
+                    <div class="about-copy">
+                        <span class="section-eyebrow">About</span>
+                        <p class="intro-lead">Meet <strong id="intro-app-name">{{header_logo_title}}</strong></p>
                         <p class="intro-body" id="about-description">{{description}}</p>
-                        <span class="panel-note">Built for minimalists</span>
-                    </article>
-
-                    <aside class="panel panel-links">
-                        <div class="meta-list">
-                            <div class="meta-row">
-                                <span>Download</span>
-                                <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-source">Source</a>
-                            </div>
-                            <div class="meta-row">
-                                <span>Play Store</span>
-                                <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-visit">Visit</a>
-                            </div>
-                            <div class="meta-row">
-                                <span>Direct APK</span>
-                                <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-download">Download</a>
-                            </div>
+                    </div>
+                    <div class="meta-list">
+                        <div class="meta-row">
+                            <span>Source</span>
+                            <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-source">View</a>
                         </div>
-                    </aside>
+                        <div class="meta-row">
+                            <span>Play Store</span>
+                            <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-visit">Visit</a>
+                        </div>
+                        <div class="meta-row">
+                            <span>Direct APK</span>
+                            <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-download">Download</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -94,25 +132,15 @@
         <section class="content-section screenshots-section" id="screenshots">
             <div class="container">
                 <div class="section-heading">
-                    <span class="section-index">(02)</span>
-                    <span class="section-heading-text">Screenshots</span>
+                    <span class="section-eyebrow">Screenshots</span>
+                    <h2 class="section-title">See it in action</h2>
                 </div>
             </div>
-
             <div class="container">
                 <div class="screenshot-carousel-wrapper">
                     <div class="screenshot-carousel" id="screenshot-carousel">
-                        <div class="screenshot-item">
-                            <img src="{{screenshot_1}}" alt="App Screenshot 1" loading="lazy" id="preview-screenshot-1">
-                        </div>
-                        <div class="screenshot-item">
-                            <img src="{{screenshot_2}}" alt="App Screenshot 2" loading="lazy" id="preview-screenshot-2">
-                        </div>
-                        <div class="screenshot-item">
-                            <img src="{{screenshot_3}}" alt="App Screenshot 3" loading="lazy" id="preview-screenshot-3">
-                        </div>
+                        {{screenshots_markup}}
                     </div>
-
                     <div class="screenshot-nav" aria-hidden="true">
                         <button class="nav-btn" id="carousel-prev" aria-label="Previous screenshot">
                             <svg viewBox="0 0 24 24">
@@ -129,67 +157,18 @@
             </div>
         </section>
 
-        <section class="content-section features-section" id="about">
+        <section class="cta-band">
             <div class="container">
-                <div class="section-heading">
-                    <span class="section-index">(03)</span>
-                    <span class="section-heading-text">More Relevant</span>
+                <div class="cta-inner">
+                    <h2 class="cta-title">Ready to get started?</h2>
+                    <p class="cta-sub">Download now and see why people love it.</p>
+                    <a href="{{play_store_link}}" class="btn btn-primary btn-lg" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m3 3 14 9-14 9Z"></path>
+                        </svg>
+                        Get it on Google Play
+                    </a>
                 </div>
-
-                <div class="feature-grid">
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="M12 20h9"></path>
-                                <path d="M16.5 3.5a2.12 2.12 0 1 1 3 3L7 19l-4 1 1-4Z"></path>
-                            </svg>
-                        </div>
-                        <h3>Rich Notes</h3>
-                        <p>Material You theming with dynamic colors, multiple view modes, and tactile mobile interactions.</p>
-                        <div class="feature-tags">
-                            <span>Material 3</span>
-                            <span>Dynamic</span>
-                        </div>
-                    </article>
-
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24">
-                                <rect x="5" y="11" width="14" height="10" rx="2"></rect>
-                                <path d="M8 11V7a4 4 0 1 1 8 0v4"></path>
-                            </svg>
-                        </div>
-                        <h3>Secure</h3>
-                        <p>Lock individual notes with a PIN or pattern. Keep personal writing organized without giving up control.</p>
-                        <div class="feature-tags">
-                            <span>Lock</span>
-                            <span>Trash</span>
-                        </div>
-                    </article>
-
-                    <article class="feature-card">
-                        <div class="feature-icon">
-                            <svg viewBox="0 0 24 24">
-                                <path d="m2 2 20 20"></path>
-                                <path d="M8.5 8.5a5 5 0 0 0 7 7"></path>
-                                <path d="M16 8a5 5 0 0 0-7-1"></path>
-                                <path d="M12 12h.01"></path>
-                            </svg>
-                        </div>
-                        <h3>Offline First</h3>
-                        <p>All data is stored locally with no tracking and no cloud requirement. Your data stays yours.</p>
-                        <div class="feature-tags">
-                            <span>Local DB</span>
-                            <span>Backup</span>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="privacy-link-wrapper">
-            <div class="container">
-                <a class="privacy-link" href="./privacy">View Privacy Policy</a>
             </div>
         </section>
     </main>

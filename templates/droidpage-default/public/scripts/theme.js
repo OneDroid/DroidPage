@@ -1,8 +1,10 @@
 /* ============================================================
    DroidPage Default Theme — theme.js
    1. Applies CSS variables from the renderer-injected JSON block
-   2. Handles screenshot carousel navigation
-   3. Handles lightbox
+   2. Handles mobile nav toggle
+   3. Handles the phone-mockup empty state
+   4. Handles screenshot carousel navigation
+   5. Handles lightbox
    ============================================================ */
 
 (function () {
@@ -36,7 +38,37 @@
         }
     }
 
-    /* ── 2. Screenshot Carousel Navigation ───────────────── */
+    /* ── 2. Mobile Nav Toggle ────────────────────────────── */
+    const navToggle = document.getElementById('nav-toggle');
+    const siteNav   = document.getElementById('site-nav');
+    if (navToggle && siteNav) {
+        navToggle.addEventListener('click', () => {
+            const open = siteNav.classList.toggle('open');
+            navToggle.classList.toggle('is-active', open);
+            navToggle.setAttribute('aria-expanded', String(open));
+        });
+        siteNav.addEventListener('click', (e) => {
+            if (e.target.closest('a')) {
+                siteNav.classList.remove('open');
+                navToggle.classList.remove('is-active');
+                navToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
+
+    /* ── 3. Phone-Mockup Empty State ─────────────────────── */
+    const deviceFrame = document.querySelector('.device-frame');
+    const deviceImg   = document.getElementById('hero-device-img');
+    if (deviceFrame && deviceImg) {
+        const syncDevice = () => {
+            deviceFrame.classList.toggle('is-empty', !deviceImg.getAttribute('src'));
+        };
+        syncDevice();
+        deviceImg.addEventListener('error', () => deviceFrame.classList.add('is-empty'));
+        deviceImg.addEventListener('load', () => deviceFrame.classList.remove('is-empty'));
+    }
+
+    /* ── 4. Screenshot Carousel Navigation ───────────────── */
     const carousel = document.getElementById('screenshot-carousel');
     const btnPrev  = document.getElementById('carousel-prev');
     const btnNext  = document.getElementById('carousel-next');
@@ -51,10 +83,9 @@
         });
     }
 
-    /* ── 3. Lightbox ─────────────────────────────────────── */
+    /* ── 5. Lightbox ─────────────────────────────────────── */
     const lightbox    = document.getElementById('lightbox');
     const lightboxImg = document.getElementById('lightboxImg');
-    const items       = document.querySelectorAll('.screenshot-item');
 
     if (lightbox && lightboxImg) {
         const openLightbox = (src) => {
@@ -71,12 +102,14 @@
             }, 300);
         };
 
-        items.forEach(item => {
-            item.addEventListener('click', () => {
+        if (carousel) {
+            carousel.addEventListener('click', (e) => {
+                const item = e.target.closest('.screenshot-item');
+                if (!item) return;
                 const img = item.querySelector('img');
                 if (img && img.src) openLightbox(img.src);
             });
-        });
+        }
 
         lightbox.addEventListener('click', closeLightbox);
 

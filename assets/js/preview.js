@@ -1,3 +1,5 @@
+import { featureIconSvg } from './icons.js';
+
 export const Preview = {
     iframe: null,
     fontStacks: {
@@ -32,6 +34,49 @@ export const Preview = {
     buildFooterNavMarkup(items) {
         return items.map((item) => `
             <li><a href="${item.url || '#'}">${item.label || 'New Link'}</a></li>
+        `).join('');
+    },
+
+    escapeHtml(value) {
+        return String(value ?? '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    },
+
+    parseJsonField(raw, fallback = []) {
+        try {
+            const parsed = JSON.parse(raw || '[]');
+            return Array.isArray(parsed) ? parsed : fallback;
+        } catch (error) {
+            return fallback;
+        }
+    },
+
+    buildFeaturesMarkup(items) {
+        return items.map((item) => {
+            const tags = Array.isArray(item.tags) ? item.tags : [];
+            const tagsMarkup = tags.length
+                ? `<div class="feature-tags">${tags.map((tag) => `<span>${this.escapeHtml(tag)}</span>`).join('')}</div>`
+                : '';
+            return `
+                <article class="feature-card">
+                    <div class="feature-icon">${featureIconSvg(item.icon)}</div>
+                    <h3>${this.escapeHtml(item.title || '')}</h3>
+                    <p>${this.escapeHtml(item.text || '')}</p>
+                    ${tagsMarkup}
+                </article>
+            `;
+        }).join('');
+    },
+
+    buildScreenshotsMarkup(items) {
+        return items.map((item, index) => `
+            <div class="screenshot-item">
+                <img src="${item.src || ''}" alt="App Screenshot ${index + 1}" loading="lazy">
+            </div>
         `).join('');
     },
 
@@ -218,9 +263,40 @@ export const Preview = {
         setHref('meta-link-source', data.play_store_link || '#');
         setHref('meta-link-visit', data.play_store_link || '#');
         setHref('meta-link-download', data.play_store_link || '#');
-        setSrc('preview-screenshot-1', data.screenshot_1 || '');
-        setSrc('preview-screenshot-2', data.screenshot_2 || '');
-        setSrc('preview-screenshot-3', data.screenshot_3 || '');
+
+        const featureItems = this.parseJsonField(data.features);
+        const featureGrid = doc.getElementById('feature-grid');
+        if (featureGrid) {
+            featureGrid.innerHTML = this.buildFeaturesMarkup(featureItems);
+        }
+
+        const screenshotItems = this.parseJsonField(data.screenshots);
+        const carousel = doc.getElementById('screenshot-carousel');
+        if (carousel) {
+            carousel.innerHTML = this.buildScreenshotsMarkup(screenshotItems);
+        }
+
+        const heroShot = screenshotItems.find((shot) => shot.src)?.src || '';
+        const heroImg = doc.getElementById('hero-device-img');
+        const deviceFrame = heroImg?.closest('.device-frame');
+        if (heroImg) {
+            heroImg.setAttribute('src', heroShot);
+        }
+        if (deviceFrame) {
+            deviceFrame.classList.toggle('is-empty', !heroShot);
+        }
+
+        let faviconLink = doc.querySelector('link[rel="icon"]');
+        if (data.favicon) {
+            if (!faviconLink) {
+                faviconLink = doc.createElement('link');
+                faviconLink.setAttribute('rel', 'icon');
+                doc.head.appendChild(faviconLink);
+            }
+            faviconLink.setAttribute('href', data.favicon);
+        } else if (faviconLink) {
+            faviconLink.remove();
+        }
 
         setText('header-brand-title', data.header_logo_title || appName);
         setText('header-brand-subtitle', data.header_logo_subtitle || tagline);
