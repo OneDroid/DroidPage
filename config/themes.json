@@ -230,5 +230,63 @@
         "description": "Footer section"
       }
     ]
+  },
+  {
+    "id": "droidpage-vision",
+    "name": "Vision Glass",
+    "description": "Apple-style liquid glass — frosted translucent panels over a soft color-mesh backdrop.",
+    "thumbnail": "templates/droidpage-vision/public/media/screenshots/notes_list.png",
+    "path": "templates/droidpage-vision/",
+    "features": ["maxWidth"],
+    "colorVars": [
+      {
+        "key": "primary_color",
+        "label": "Primary / Accent",
+        "default": "#0071e3",
+        "description": "Apple-blue accent for buttons and links"
+      },
+      {
+        "key": "bg_color",
+        "label": "Page Background",
+        "default": "#eef1f7",
+        "description": "Soft light backdrop behind the glass"
+      },
+      {
+        "key": "text_primary",
+        "label": "Primary Text",
+        "default": "#1d1d1f",
+        "description": "Headings and body text"
+      },
+      {
+        "key": "text_secondary",
+        "label": "Secondary Text",
+        "default": "#6e6e73",
+        "description": "Subtitles and captions"
+      },
+      {
+        "key": "card_bg",
+        "label": "Glass Tint",
+        "default": "#ffffff",
+        "description": "Base tint of the frosted panels"
+      },
+      {
+        "key": "border_color",
+        "label": "Glass Highlight",
+        "default": "#ffffff",
+        "description": "Glass edge highlight color"
+      },
+      {
+        "key": "header_bg",
+        "label": "Header Background",
+        "default": "#ffffff",
+        "description": "Top bar glass tint"
+      },
+      {
+        "key": "footer_bg",
+        "label": "Footer Background",
+        "default": "#0b0b0f",
+        "description": "Footer section"
+      }
+    ]
   }
 ]

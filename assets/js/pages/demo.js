@@ -1,5 +1,5 @@
-import { ThemeManager } from './themeManager.js';
-import { Renderer } from './renderer.js';
+import { ThemeManager } from '../modules/themeManager.js';
+import { Renderer } from '../modules/renderer.js';
 
 // Absolute screenshot URLs so they render regardless of the injected <base> tag.
 const screenshot = (file) =>
@@ -110,6 +110,13 @@ async function init() {
     if (!html.includes('<base')) {
         html = html.replace('<head>', `<head>${baseTag}`);
     }
+
+    // Avoid an unstyled flash: hide until the theme paints, then fade in.
+    const fadeStyle = `<style>html{opacity:0;transition:opacity .22s ease}html.is-ready{opacity:1}</style>`;
+    const fadeScript = `<script>(function(){function r(){document.documentElement.classList.add('is-ready');}` +
+        `if(document.readyState==='complete'){r();}else{addEventListener('load',r);setTimeout(r,600);}})();<\/script>`;
+    html = html.replace('</head>', `${fadeStyle}</head>`);
+    html = html.includes('</body>') ? html.replace('</body>', `${fadeScript}</body>`) : html + fadeScript;
 
     document.open();
     document.write(html);
