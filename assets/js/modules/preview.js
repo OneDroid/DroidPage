@@ -87,11 +87,26 @@ export const Preview = {
 
     init(iframeId) {
         this.iframe = document.getElementById(iframeId);
+        if (this.iframe) {
+            this.iframe.style.transition = 'opacity 0.18s ease';
+        }
+    },
+
+    reveal() {
+        if (this.iframe) this.iframe.style.opacity = '1';
     },
 
     update(renderedHtml, basePath) {
         return new Promise((resolve) => {
             if (!this.iframe) return resolve();
+
+            let settled = false;
+            const finish = () => {
+                if (settled) return;
+                settled = true;
+                this.reveal();
+                resolve();
+            };
 
             const iframeWindow = this.iframe.contentWindow;
             const previousDocument = this.iframe.contentDocument || iframeWindow?.document;
@@ -147,18 +162,24 @@ export const Preview = {
                         restoreScroll();
                         nextWindow.setTimeout(restoreScroll, 60);
                         nextWindow.setTimeout(restoreScroll, 180);
-                        resolve();
+                        finish();
                     });
                     return;
                 }
-                resolve();
+                finish();
             };
             this.iframe.addEventListener('load', onIframeLoad);
+
+            // Hide during rewrite to avoid an unstyled flash while theme.css loads
+            this.iframe.style.opacity = '0';
 
             const doc = this.iframe.contentDocument || this.iframe.contentWindow.document;
             doc.open();
             doc.write(htmlWithBase);
             doc.close();
+
+            // `load` after document.write is unreliable — guarantee reveal via timeout fallback.
+            setTimeout(finish, 350);
         });
     },
 

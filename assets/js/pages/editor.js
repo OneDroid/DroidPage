@@ -1,9 +1,9 @@
-import { ThemeManager } from './themeManager.js';
-import { FormManager } from './formManager.js';
-import { Renderer } from './renderer.js';
-import { Preview } from './preview.js';
-import { Exporter } from './exporter.js';
-import { FEATURE_ICONS, FEATURE_ICON_OPTIONS, featureIconSvg } from './icons.js';
+import { ThemeManager } from '../modules/themeManager.js';
+import { FormManager } from '../modules/formManager.js';
+import { Renderer } from '../modules/renderer.js';
+import { Preview } from '../modules/preview.js';
+import { Exporter } from '../modules/exporter.js';
+import { FEATURE_ICONS, FEATURE_ICON_OPTIONS, featureIconSvg } from '../modules/icons.js';
 
 const FONT_OPTIONS = [
     { value: 'inter', label: 'Inter' },

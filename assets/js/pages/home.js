@@ -1,4 +1,4 @@
-import { ThemeManager } from './themeManager.js';
+import { ThemeManager } from '../modules/themeManager.js';
 
 const THEME_KEY = 'droidpage_ui_theme';
 
