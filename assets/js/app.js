@@ -1296,6 +1296,15 @@ class DroidPageApp {
 
         sidebarToggle.addEventListener('click', toggleSidebar);
 
+        // Mobile drawer: backdrop dismiss + start collapsed on small screens
+        const backdrop = document.getElementById('sidebar-backdrop');
+        const isMobileView = () => window.matchMedia('(max-width: 1024px)').matches;
+        const closeMobileSidebar = () => {
+            if (isMobileView() && !sidebarToggle.classList.contains('collapsed')) toggleSidebar();
+        };
+        backdrop?.addEventListener('click', closeMobileSidebar);
+        if (isMobileView()) applyWidth(0);
+
         // Form field changes (text inputs, textareas, number, url, color in App Details)
         const handleFieldChange = (e) => {
             const { name } = e.target;

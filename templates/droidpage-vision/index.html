@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{meta_description}}">
+    <title>{{meta_title}}</title>
+    {{favicon_markup}}
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../../assets/css/global.css">
+    <link rel="stylesheet" href="public/styles/theme.css">
+
+    <script type="application/json" id="theme-vars">{"--font-choice":"{{font_family}}","--primary-color":"{{primary_color}}","--bg-color":"{{bg_color}}","--text-primary":"{{text_primary}}","--text-secondary":"{{text_secondary}}","--card-bg":"{{card_bg}}","--border-color":"{{border_color}}","--header-bg":"{{header_bg}}","--footer-bg":"{{footer_bg}}","--container-max-width":"{{max_width}}px","--header-logo-size":"{{header_logo_size}}px","--footer-logo-size":"{{footer_logo_size}}px"}</script>
+</head>
+
+<body>
+    <header class="site-header {{header_sticky_class}} {{header_visibility_class}}" id="site-header">
+        <div class="container">
+            <a href="#" class="header-brand" id="header-brand">
+                <img src="public/media/img/header-logo.png" alt="{{app_name}} logo" class="header-brand-logo"
+                    data-default-src="public/media/img/header-logo.png">
+                <span class="header-brand-copy">
+                    <span class="header-brand-title {{header_logo_title_class}}" id="header-brand-title">{{header_logo_title}}</span>
+                    <span class="header-brand-subtitle {{header_logo_subtitle_class}}" id="header-brand-subtitle">{{header_logo_subtitle}}</span>
+                </span>
+            </a>
+
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+
+            <nav class="site-nav" id="site-nav">
+                <ul class="header-nav" id="header-nav-list">
+                    {{header_nav_items_markup}}
+                    {{header_nav_cta_markup}}
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="landing-shell">
+        <section class="hero" id="home">
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <span class="hero-kicker">Now available on Android</span>
+                    <h1 id="hero-app-name">{{app_name}}</h1>
+                    <p class="hero-tagline" id="hero-tagline">{{tagline}}</p>
+                    <div class="hero-actions">
+                        <a href="{{play_store_link}}" class="btn btn-primary" target="_blank" rel="noopener"
+                            id="hero-play-store-link">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="m3 3 14 9-14 9Z"></path>
+                            </svg>
+                            Get it on Google Play
+                        </a>
+                        <a href="#screenshots" class="btn btn-ghost">See screenshots</a>
+                    </div>
+                    <div class="hero-trust">
+                        <div class="trust-stat">
+                            <span class="trust-value">4.9</span>
+                            <span class="trust-label">App rating</span>
+                        </div>
+                        <div class="trust-divider"></div>
+                        <div class="trust-stat">
+                            <span class="trust-value">50K+</span>
+                            <span class="trust-label">Downloads</span>
+                        </div>
+                        <div class="trust-divider"></div>
+                        <div class="trust-stat">
+                            <span class="trust-value">Free</span>
+                            <span class="trust-label">No ads</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-device" aria-hidden="true">
+                    <div class="device-frame">
+                        <span class="device-speaker"></span>
+                        <img class="device-screen" id="hero-device-img" src="{{hero_screenshot}}" alt="">
+                        <span class="device-screen-empty">Your screenshot</span>
+                    </div>
+                    <div class="hero-glow"></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section features-section" id="features">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="section-eyebrow">Features</span>
+                    <h2 class="section-title">Everything you need, nothing you don't</h2>
+                </div>
+                <div class="feature-grid" id="feature-grid">
+                    {{features_markup}}
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section about-section" id="about">
+            <div class="container">
+                <div class="about-card">
+                    <div class="about-copy">
+                        <span class="section-eyebrow">About</span>
+                        <p class="intro-lead">Meet <strong id="intro-app-name">{{header_logo_title}}</strong></p>
+                        <p class="intro-body" id="about-description">{{description}}</p>
+                    </div>
+                    <div class="meta-list">
+                        <div class="meta-row">
+                            <span>Source</span>
+                            <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-source">View</a>
+                        </div>
+                        <div class="meta-row">
+                            <span>Play Store</span>
+                            <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-visit">Visit</a>
+                        </div>
+                        <div class="meta-row">
+                            <span>Direct APK</span>
+                            <a href="{{play_store_link}}" target="_blank" rel="noopener" id="meta-link-download">Download</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section screenshots-section" id="screenshots">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="section-eyebrow">Screenshots</span>
+                    <h2 class="section-title">See it in action</h2>
+                </div>
+            </div>
+            <div class="container">
+                <div class="screenshot-carousel-wrapper">
+                    <div class="screenshot-carousel" id="screenshot-carousel">
+                        {{screenshots_markup}}
+                    </div>
+                    <div class="screenshot-nav" aria-hidden="true">
+                        <button class="nav-btn" id="carousel-prev" aria-label="Previous screenshot">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <button class="nav-btn" id="carousel-next" aria-label="Next screenshot">
+                            <svg viewBox="0 0 24 24">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-band">
+            <div class="container">
+                <div class="cta-inner">
+                    <h2 class="cta-title">Ready to get started?</h2>
+                    <p class="cta-sub">Download now and see why people love it.</p>
+                    <a href="{{play_store_link}}" class="btn btn-primary btn-lg" target="_blank" rel="noopener">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="m3 3 14 9-14 9Z"></path>
+                        </svg>
+                        Get it on Google Play
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer {{footer_visibility_class}}">
+        <div class="container">
+            <div class="footer-inner {{footer_inner_class}}" id="footer-inner">
+                <div class="{{footer_brand_block_class}}" id="footer-brand-block">
+                    <div class="footer-brand-wrap" id="footer-brand">
+                        {{footer_logo_markup}}
+                        <div class="footer-brand-copy">
+                            <a href="#" class="footer-brand {{footer_brand_title_class}}" id="footer-brand-title">{{footer_brand_title}}</a>
+                            <p class="footer-tagline {{footer_brand_subtitle_class}}" id="footer-brand-subtitle">{{footer_brand_subtitle}}</p>
+                        </div>
+                    </div>
+                </div>
+                <nav class="{{footer_nav_class}}" id="footer-nav">
+                    <ul class="footer-links" id="footer-nav-list">
+                        {{footer_nav_items_markup}}
+                    </ul>
+                </nav>
+            </div>
+            <div class="footer-bottom" id="footer-bottom">{{footer_bottom_text}}</div>
+        </div>
+    </footer>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot preview">
+        <img class="lightbox-content" id="lightboxImg" src="" alt="Enlarged Screenshot">
+    </div>
+
+    <script src="public/scripts/theme.js" defer></script>
+</body>
+
+</html>
